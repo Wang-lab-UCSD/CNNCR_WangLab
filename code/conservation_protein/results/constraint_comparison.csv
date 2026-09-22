@@ -1,0 +1,4 @@
+metric,n_universal,median_universal,n_background,median_background,mannwhitney_U,p_value
+pLI (LoF intolerance),250,0.706315,1339,0.094471,213664.5,3.6372486143933196e-12
+LOEUF (LoF obs/exp upper bound),250,0.4485,1339,0.705,123267.0,3.523510286252243e-11
+Missense z-score,250,1.13865,1339,0.87999,197015.5,8.566582084021861e-06

@@ -1,0 +1,45 @@
+# One environment for the whole repository (development used four: enhancer/py3.7, multi_agent/py3.9,
+# CNN_CR_pytorch/py3.9+cu118, parm_env/py3.13; the versions below are the ones the figures were made with).
+# Build:  conda env create -f environment.yml
+#         mamba/micromamba solve this in ~1 min; conda's classic solver can take much longer.
+# GPU:    the pytorch build targets CUDA 11.8; for CPU-only replace "pytorch-cuda=11.8" by "cpuonly".
+name: cnncr
+channels:
+  - pytorch
+  - nvidia
+  - bioconda
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - numpy=1.26            # PyTorch 2.2 wheels are built against NumPy 1.x
+  - pandas>=2.2,<2.3
+  - scipy>=1.12,<1.14
+  - scikit-learn>=1.5,<1.7
+  - statsmodels>=0.14
+  - matplotlib>=3.8,<3.10
+  - seaborn>=0.13
+  - networkx>=3.2
+  - h5py>=3.10
+  - pyarrow>=15
+  - biopython>=1.83
+  - pybigwig
+  - pybedtools
+  - anndata>=0.10
+  - pillow
+  - requests
+  - openpyxl
+  - jupyterlab>=4        # notebooks/ are the guided, step-by-step way to run everything
+  - nbconvert
+  - ipykernel
+  - ipywidgets
+  - pytorch=2.2.0
+  - pytorch-cuda=11.8
+  - meme>=5.5.1           # tomtom and fimo
+  - bedtools>=2.30
+  - ucsc-liftover
+  - pip:
+      - logomaker==0.8
+      - pymupdf==1.24.*   # imported as "fitz"; used by the figure-assembly scripts
+      - shap==0.44.*
+      - python-pptx

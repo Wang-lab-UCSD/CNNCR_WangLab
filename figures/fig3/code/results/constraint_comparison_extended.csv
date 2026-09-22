@@ -1,0 +1,5 @@
+metric,key,n_universal,median_universal,n_background,median_background,mannwhitney_U,p_value
+pLI (LoF intolerance),pLI,250,0.706315,1338,0.09453149999999999,213435.5,3.927608517145328e-12
+LOEUF (LoF obs/exp upper bound),oe_lof_upper,250,0.4485,1338,0.7044999999999999,123263.0,3.863432216297611e-11
+Missense z-score,mis_z,250,1.13865,1338,0.883795,196779.5,9.126488604740937e-06
+Synonymous z-score,syn_z,250,-0.15863,1338,-0.155275,161907.5,0.42216820200166194

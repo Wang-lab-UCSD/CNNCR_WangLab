@@ -1,0 +1,256 @@
+family,motif,tf,loeuf,n_motifs
+C2H2 ZF,universal_0,ZNF384,0.228,19
+C2H2 ZF,universal_1,GLIS2,0.415,19
+C2H2 ZF,universal_1,ZIC5,0.519,19
+C2H2 ZF,universal_1,KLF1,1.128,19
+C2H2 ZF,universal_1,MAZ,0.351,19
+C2H2 ZF,universal_1,GLIS3,0.736,19
+C2H2 ZF,universal_1,ZNF740,0.709,19
+C2H2 ZF,universal_1,WT1,0.247,19
+C2H2 ZF,universal_1,SP2,0.219,19
+C2H2 ZF,universal_1,KLF10,0.865,19
+C2H2 ZF,universal_1,SP4,0.283,19
+C2H2 ZF,universal_1,ZNF263,0.969,19
+C2H2 ZF,universal_1,KLF14,1.585,19
+C2H2 ZF,universal_1,ZIC1,0.364,19
+C2H2 ZF,universal_1,ZNF148,0.103,19
+C2H2 ZF,universal_1,KLF7,0.245,19
+C2H2 ZF,universal_1,VEZF1,0.24,19
+C2H2 ZF,universal_1,ZNF281,0.249,19
+C2H2 ZF,universal_1,KLF15,0.613,19
+C2H2 ZF,universal_1,RREB1,0.156,19
+C2H2 ZF,universal_1,KLF4,0.174,19
+C2H2 ZF,universal_1,SP1,0.1,19
+C2H2 ZF,universal_1,SP5,0.595,19
+C2H2 ZF,universal_1,KLF9,0.421,19
+C2H2 ZF,universal_1,GLIS1,0.609,19
+C2H2 ZF,universal_1,KLF12,0.288,19
+Forkhead,universal_2,STAT2,0.319,1
+Forkhead,universal_2,FOXF1,0.302,1
+Forkhead,universal_2,SOX15,0.896,1
+Forkhead,universal_2,ZNF384,0.228,1
+Forkhead,universal_2,FOXO3,0.267,1
+STAT,universal_3,STAT3,0.095,1
+STAT,universal_3,STAT5B,0.22,1
+STAT,universal_3,STAT5A,0.202,1
+STAT,universal_3,ZNF136,1.375,1
+STAT,universal_3,HOXA13,0.307,1
+STAT,universal_3,ZNF680,0.903,1
+C2H2 ZF,universal_4,BCL11B,0.282,19
+C2H2 ZF,universal_4,BARX2,0.687,19
+Homeodomain,universal_6,HOXB13,1.713,3
+Homeodomain,universal_6,HOXA13,0.307,3
+Homeodomain,universal_6,CDX2,0.589,3
+Homeodomain,universal_6,HOXD13,0.952,3
+Homeodomain,universal_6,HOXA10,0.416,3
+Homeodomain,universal_6,YY1,0.198,3
+Homeodomain,universal_6,HOXD9,1.066,3
+Homeodomain,universal_7,MEIS2,0.184,3
+Homeodomain,universal_7,MEIS1,0.136,3
+Homeodomain,universal_7,ONECUT1,0.592,3
+Homeodomain,universal_7,PBX2,0.234,3
+C2H2 ZF,universal_9,HINFP,0.514,19
+Homeodomain,universal_10,NKX6-2,1.313,3
+Homeodomain,universal_10,NKX3-1,1.381,3
+Homeodomain,universal_10,VENTX,1.916,3
+Homeodomain,universal_10,EMX2,0.316,3
+Homeodomain,universal_10,ISX,1.662,3
+Homeodomain,universal_10,VSX2,1.043,3
+Homeodomain,universal_10,LHX6,0.326,3
+Homeodomain,universal_10,LBX2,1.441,3
+Homeodomain,universal_10,SHOX,0.515,3
+Homeodomain,universal_10,UNCX,0.635,3
+Homeodomain,universal_10,PRRX1,0.659,3
+Homeodomain,universal_10,GSX1,1.132,3
+Homeodomain,universal_10,RAX,0.859,3
+Homeodomain,universal_10,PAX3,0.475,3
+Homeodomain,universal_10,MIXL1,1.555,3
+Homeodomain,universal_10,PAX4,0.894,3
+Homeodomain,universal_10,PDX1,1.053,3
+Homeodomain,universal_10,HOXA7,1.477,3
+Homeodomain,universal_10,HOXB3,0.409,3
+Homeodomain,universal_10,EN1,0.35,3
+Homeodomain,universal_10,LHX9,0.288,3
+Homeodomain,universal_10,NKX6-1,1.003,3
+Homeodomain,universal_10,HESX1,1.237,3
+Homeodomain,universal_10,DLX6,0.378,3
+Homeodomain,universal_10,LHX4,0.686,3
+Homeodomain,universal_10,BSX,1.327,3
+Homeodomain,universal_10,LBX1,0.593,3
+Homeodomain,universal_10,NOTO,1.333,3
+Homeodomain,universal_10,VAX2,1.026,3
+Homeodomain,universal_10,GBX1,0.668,3
+Homeodomain,universal_10,NOBOX,0.759,3
+Homeodomain,universal_10,GBX2,0.563,3
+Homeodomain,universal_10,RAX2,1.807,3
+Homeodomain,universal_10,ISL2,0.67,3
+Homeodomain,universal_10,DLX3,0.97,3
+Homeodomain,universal_10,MSX2,0.819,3
+Homeodomain,universal_10,ARGFX,1.851,3
+Homeodomain,universal_10,SHOX2,0.831,3
+Homeodomain,universal_10,LHX2,0.224,3
+Homeodomain,universal_10,EN2,0.634,3
+Homeodomain,universal_10,TLX2,0.829,3
+Homeodomain,universal_10,BARX1,0.683,3
+Homeodomain,universal_10,GSX2,0.826,3
+Homeodomain,universal_10,LHX8,0.473,3
+Homeodomain,universal_10,ALX3,1.032,3
+Homeodomain,universal_10,MSX1,1.01,3
+Homeodomain,universal_10,ESX1,0.749,3
+Homeodomain,universal_10,LHX5,0.348,3
+Homeodomain,universal_10,PRRX2,1.092,3
+bZIP,universal_11,JDP2,0.71,1
+bZIP,universal_11,ATF7,0.205,1
+bZIP,universal_11,CREB5,0.48,1
+bZIP,universal_11,ATF3,0.893,1
+bZIP,universal_11,JUNB,0.46,1
+bZIP,universal_11,CREM,0.475,1
+bZIP,universal_11,FOS,0.645,1
+bZIP,universal_11,CREB3L4,1.02,1
+C2H2 ZF,universal_12,EGR1,0.59,19
+C2H2 ZF,universal_12,ZBTB14,0.645,19
+C2H2 ZF,universal_12,KLF17,1.357,19
+C2H2 ZF,universal_12,KLF3,0.431,19
+C2H2 ZF,universal_12,TCFL5,0.255,19
+C2H2 ZF,universal_13,ZNF684,1.482,19
+Ets,universal_14,ZBTB7A,0.329,2
+Ets,universal_14,ERF,0.261,2
+Ets,universal_14,ELK3,0.715,2
+Ets,universal_14,ELF1,0.584,2
+Ets,universal_14,ELF2,0.258,2
+Ets,universal_14,FEV,1.317,2
+Ets,universal_14,ELF3,0.296,2
+Ets,universal_14,ETV4,0.846,2
+Ets,universal_14,IKZF3,0.294,2
+Ets,universal_14,ELK1,0.341,2
+Ets,universal_14,FLI1,0.28,2
+Ets,universal_14,ETV2,1.418,2
+Ets,universal_14,ETV7,1.528,2
+Ets,universal_14,ETV3,0.299,2
+Ets,universal_14,ELK4,0.915,2
+Ets,universal_14,ELF4,0.644,2
+Ets,universal_14,ETS1,0.389,2
+Ets,universal_14,EHF,0.425,2
+Ets,universal_14,SPDEF,0.308,2
+Ets,universal_14,ETV1,0.347,2
+Ets,universal_14,ETV6,0.318,2
+Ets,universal_14,GABPA,0.232,2
+Ets,universal_14,ETS2,0.197,2
+Ets,universal_14,ERG,0.329,2
+Ets,universal_14,ETV5,0.092,2
+Ets,universal_16,STAT2,0.319,2
+Ets,universal_16,SPI1,0.244,2
+Ets,universal_16,SPIB,0.388,2
+Ets,universal_16,PRDM1,0.333,2
+bHLH,universal_17,ZBTB14,0.645,4
+bHLH,universal_17,NRF1,0.189,4
+bHLH,universal_17,SOHLH2,0.611,4
+bHLH,universal_17,TCFL5,0.255,4
+Sox,universal_18,SOX15,0.896,2
+Sox,universal_18,SOX4,0.359,2
+Sox,universal_18,SOX11,0.44,2
+Sox,universal_18,SOX10,0.209,2
+bHLH,universal_19,TCF3,0.498,4
+bHLH,universal_19,SNAI1,0.681,4
+bHLH,universal_19,ZEB1,0.317,4
+bHLH,universal_19,TFEC,1.135,4
+bHLH,universal_19,TCF12,0.372,4
+bHLH,universal_19,PTF1A,1.009,4
+E2F,universal_20,E2F3,0.349,2
+E2F,universal_20,E2F2,0.561,2
+E2F,universal_20,E2F7,0.285,2
+E2F,universal_20,ZNF417,1.849,2
+E2F,universal_20,E2F1,0.225,2
+E2F,universal_20,E2F8,0.361,2
+E2F,universal_20,E2F4,0.49,2
+C2H2 ZF,universal_21,ZNF331,0.292,19
+C2H2 ZF,universal_22,REST,0.286,19
+T-box,universal_23,TBX4,0.445,1
+T-box,universal_23,TBR1,0.194,1
+T-box,universal_23,MGA,0.09,1
+T-box,universal_23,TBX5,0.135,1
+T-box,universal_23,TBX6,0.688,1
+T-box,universal_23,TBX2,0.246,1
+T-box,universal_23,EOMES,0.3,1
+T-box,universal_23,TBX20,0.315,1
+T-box,universal_23,TBX19,0.979,1
+T-box,universal_23,TBX15,0.437,1
+T-box,universal_23,TBX21,0.226,1
+T-box,universal_23,TBX3,0.281,1
+T-box,universal_23,TBX18,0.193,1
+T-box,universal_23,TBX1,0.427,1
+C2H2 ZF,universal_24,MZF1,1.082,19
+C2H2 ZF,universal_24,FOXH1,0.842,19
+C2H2 ZF,universal_24,EBF1,0.256,19
+C2H2 ZF,universal_25,ZNF136,1.375,19
+C2H2 ZF,universal_25,FOXO3,0.267,19
+C2H2 ZF,universal_26,ZNF707,1.114,19
+C2H2 ZF,universal_26,ZNF816,1.92,19
+Sox,universal_27,SOX14,0.472,2
+Sox,universal_27,SOX12,0.471,2
+bHLH,universal_29,MITF,0.308,4
+bHLH,universal_29,HES7,0.517,4
+bHLH,universal_29,USF1,0.585,4
+bHLH,universal_29,BHLHE41,0.206,4
+bHLH,universal_29,HEY2,0.407,4
+bHLH,universal_29,CREB3L2,0.657,4
+bHLH,universal_29,SREBF2,0.382,4
+bHLH,universal_29,ARNTL,0.277,4
+bHLH,universal_29,TFE3,0.29,4
+bHLH,universal_29,MYC,0.164,4
+bHLH,universal_29,USF2,0.249,4
+bHLH,universal_29,MNT,0.171,4
+bHLH,universal_29,MLX,0.672,4
+bHLH,universal_29,HES6,1.38,4
+bHLH,universal_29,HEY1,0.804,4
+bHLH,universal_29,MLXIPL,0.473,4
+bHLH,universal_29,THRB,0.223,4
+bHLH,universal_29,HES1,0.568,4
+bHLH,universal_29,BHLHE40,0.194,4
+bHLH,universal_29,ARNT2,0.291,4
+bHLH,universal_29,HES2,1.723,4
+bHLH,universal_29,ARNT,0.279,4
+bHLH,universal_29,TFEB,0.376,4
+bHLH,universal_29,THRA,0.454,4
+bHLH,universal_29,MYCN,0.412,4
+bHLH,universal_29,CREB3L4,1.02,4
+bHLH,universal_31,SREBF1,0.45,4
+C2H2 ZF,universal_32,ZBTB7C,0.619,19
+C2H2 ZF,universal_32,GLI2,0.309,19
+C2H2 ZF,universal_32,ZBTB7B,0.524,19
+C2H2 ZF,universal_32,ZNF135,1.092,19
+C2H2 ZF,universal_32,GLI3,0.195,19
+C2H2 ZF,universal_33,ZNF460,0.797,19
+C2H2 ZF,universal_34,ZNF680,0.903,19
+C2H2 ZF,universal_34,STAT5A,0.202,19
+Nuclear receptor,universal_35,TCF7L1,0.447,1
+Nuclear receptor,universal_35,RXRA,0.157,1
+Nuclear receptor,universal_35,NR2C2,0.22,1
+Nuclear receptor,universal_35,RXRG,0.461,1
+Nuclear receptor,universal_35,NR4A1,0.474,1
+Nuclear receptor,universal_35,NR2F6,0.638,1
+Nuclear receptor,universal_35,RARB,0.12,1
+Nuclear receptor,universal_35,ESRRB,0.519,1
+Nuclear receptor,universal_35,PPARD,0.19,1
+Nuclear receptor,universal_35,RARG,0.237,1
+Nuclear receptor,universal_35,RXRB,0.219,1
+Nuclear receptor,universal_35,THRB,0.223,1
+Nuclear receptor,universal_35,RARA,0.33,1
+Nuclear receptor,universal_35,NR2F1,0.191,1
+Nuclear receptor,universal_35,NR2F2,0.217,1
+Nuclear receptor,universal_35,ESRRA,0.49,1
+Nuclear receptor,universal_35,HNF1A,0.33,1
+E2F,universal_36,NFIA,0.202,2
+C2H2 ZF,universal_37,CTCFL,0.58,19
+C2H2 ZF,universal_37,ZNF692,1.22,19
+C2H2 ZF,universal_37,PLAG1,0.188,19
+C2H2 ZF,universal_37,ZNF320,1.461,19
+C2H2 ZF,universal_37,PLAGL2,0.243,19
+C2H2 ZF,universal_38,ZKSCAN1,0.323,19
+C2H2 ZF,universal_39,ZNF768,0.498,19
+GATA,universal_40,GATA3,0.388,1
+GATA,universal_40,GATA4,0.527,1
+GATA,universal_40,TRPS1,0.111,1
+GATA,universal_40,GATA6,0.174,1
+GATA,universal_40,GATA2,0.292,1
+GATA,universal_40,MECOM,0.136,1

@@ -1,0 +1,412 @@
+{
+  "universal_0": [
+    "ZNF384"
+  ],
+  "universal_1": [
+    "ZNF740",
+    "VEZF1",
+    "KLF12",
+    "SP2",
+    "KLF15",
+    "KLF10",
+    "SP1",
+    "MAZ",
+    "KLF7",
+    "KLF14",
+    "SP4",
+    "ZNF148",
+    "RREB1",
+    "KLF4",
+    "SP5",
+    "GLIS3",
+    "GLIS1",
+    "KLF1",
+    "Wt1",
+    "ZNF281",
+    "ZNF263",
+    "ZIC5",
+    "ZIC1",
+    "GLIS2",
+    "KLF9"
+  ],
+  "universal_2": [
+    "Foxo3",
+    "SOX15",
+    "Stat2",
+    "ZNF384",
+    "Foxf1"
+  ],
+  "universal_3": [
+    "Stat5a",
+    "Stat5b",
+    "Hoxa13",
+    "STAT3",
+    "ZNF136",
+    "ZNF680"
+  ],
+  "universal_4": [
+    "Bcl11B",
+    "ZNF384",
+    "BARX2"
+  ],
+  "universal_5": [
+    "Bcl11B",
+    "Runx1",
+    "RUNX2",
+    "FOXH1"
+  ],
+  "universal_6": [
+    "HOXB13",
+    "Hoxa13",
+    "CDX2",
+    "HOXD9",
+    "Yy1",
+    "HOXA10",
+    "Hoxd13"
+  ],
+  "universal_7": [
+    "PBX2",
+    "MEIS2",
+    "MEIS1",
+    "ONECUT1"
+  ],
+  "universal_8": [
+    "LIN54"
+  ],
+  "universal_9": [
+    "HINFP"
+  ],
+  "universal_10": [
+    "MSX1",
+    "MSX2",
+    "Msx3",
+    "ISX",
+    "SHOX",
+    "RAX2",
+    "Shox2",
+    "PRRX1",
+    "LHX2",
+    "LHX9",
+    "LBX2",
+    "RAX",
+    "BSX",
+    "PRRX2",
+    "UNCX",
+    "HESX1",
+    "GBX2",
+    "EN1",
+    "TLX2",
+    "ALX3",
+    "GSX1",
+    "ESX1",
+    "LBX1",
+    "NKX6-2",
+    "EN2",
+    "GBX1",
+    "MIXL1",
+    "VAX2",
+    "Nobox",
+    "BARX1",
+    "HOXA7",
+    "ARGFX",
+    "PDX1",
+    "VSX2",
+    "HOXB3",
+    "LHX5",
+    "Lhx8",
+    "NOTO",
+    "GSX2",
+    "NKX6-1",
+    "VENTX",
+    "DLX6",
+    "Lhx4",
+    "Nkx3-1",
+    "Dlx3",
+    "PAX3",
+    "mix-a",
+    "EMX2",
+    "LHX6",
+    "PAX4",
+    "ISL2"
+  ],
+  "universal_11": [
+    "CREM",
+    "CREB3L4",
+    "JUN::JUNB",
+    "JDP2",
+    "Creb5",
+    "FOSB::JUNB",
+    "ATF3",
+    "JUNB",
+    "FOSB::JUN",
+    "FOSL1::JUN",
+    "FOSL2::JUN",
+    "FOS::JUN",
+    "ATF7",
+    "FOSL2::JUNB",
+    "FOSL2::JUND",
+    "FOS"
+  ],
+  "universal_12": [
+    "ZBTB14",
+    "KLF3",
+    "HINFP",
+    "TCFL5",
+    "KLF17",
+    "EGR1"
+  ],
+  "universal_13": [
+    "ZNF684",
+    "ZNF263"
+  ],
+  "universal_14": [
+    "ELK1",
+    "ETV5",
+    "ELK3",
+    "ELF4",
+    "ELK1::HOXB13",
+    "ERF",
+    "FEV",
+    "ETV3",
+    "ETV4",
+    "ELK1::HOXA1",
+    "ELK1::SREBF2",
+    "ZBTB7A",
+    "HOXB2::ELK1",
+    "ELF2",
+    "ELK4",
+    "FLI1",
+    "ETS1",
+    "FLI1::DRGX",
+    "ETS2",
+    "ERF::NHLH1",
+    "ETV6",
+    "ERF::HOXB13",
+    "ETV5::DRGX",
+    "ETV2::DRGX",
+    "ETV2",
+    "ETV7",
+    "HOXD12::ELK1",
+    "ETV5::HOXA2",
+    "FOXJ2::ELF1",
+    "ERF::FOXI1",
+    "SPDEF",
+    "ETV5::FOXI1",
+    "ERF::SREBF2",
+    "FOXO1::ELK3",
+    "FOXO1::ELK1",
+    "ELF1",
+    "ETV1",
+    "Erg",
+    "FOXO1::FLI1",
+    "GABPA",
+    "Ikzf3",
+    "EHF",
+    "ELF3",
+    "FOXO1::ELF1",
+    "ETV2::FOXI1"
+  ],
+  "universal_15": [
+    "NFYC",
+    "NFYA",
+    "NFYB",
+    "Hoxa13"
+  ],
+  "universal_16": [
+    "PRDM1",
+    "Spi1",
+    "SPIB",
+    "Stat2"
+  ],
+  "universal_17": [
+    "TCFL5",
+    "Nrf1",
+    "SOHLH2",
+    "ZBTB14"
+  ],
+  "universal_18": [
+    "SOX10",
+    "SOX15",
+    "Sox11",
+    "SOX4"
+  ],
+  "universal_19": [
+    "ZEB1",
+    "TCF3",
+    "TCF12",
+    "TFAP4::ETV1",
+    "ETV2::FIGLA",
+    "SNAI1",
+    "ETV5::FIGLA",
+    "Ptf1A",
+    "TFEC"
+  ],
+  "universal_20": [
+    "E2F3",
+    "E2F2",
+    "E2F1",
+    "E2F4",
+    "E2F8",
+    "E2F7",
+    "ZNF417"
+  ],
+  "universal_21": [
+    "ZNF331"
+  ],
+  "universal_22": [
+    "REST"
+  ],
+  "universal_23": [
+    "TBX15",
+    "TBX1",
+    "TBX20",
+    "TBX18",
+    "MGA",
+    "TBX4",
+    "TBX21",
+    "TBX5",
+    "TBR1",
+    "EOMES",
+    "TBX3",
+    "Tbx6",
+    "TBX2",
+    "TBXT",
+    "TBX19"
+  ],
+  "universal_24": [
+    "MZF1",
+    "FOXH1",
+    "EBF1"
+  ],
+  "universal_25": [
+    "ZNF136",
+    "Foxo3"
+  ],
+  "universal_26": [
+    "MZF1",
+    "ZNF816",
+    "ZNF707"
+  ],
+  "universal_27": [
+    "SOX12",
+    "SOX14"
+  ],
+  "universal_28": [
+    "MSANTD3"
+  ],
+  "universal_29": [
+    "ARNT2",
+    "Arntl",
+    "TFEC",
+    "BHLHE41",
+    "TFE3",
+    "TFEB",
+    "USF2",
+    "BHLHE40",
+    "MITF",
+    "MLXIPL",
+    "MLX",
+    "SREBF2",
+    "ERF::SREBF2",
+    "Arnt",
+    "USF1",
+    "Creb3l2",
+    "HES6",
+    "THRB",
+    "ELK1::SREBF2",
+    "HES2",
+    "CREB3L4",
+    "HEY1",
+    "HES7",
+    "HES1",
+    "MNT",
+    "MYCN",
+    "HEY2",
+    "MYC",
+    "THRA"
+  ],
+  "universal_30": [
+    "ZNF707",
+    "KLF9",
+    "EGR1"
+  ],
+  "universal_31": [
+    "SREBF2",
+    "SREBF1"
+  ],
+  "universal_32": [
+    "ZBTB7C",
+    "ZBTB7B",
+    "ZNF135",
+    "GLI3",
+    "Gli2"
+  ],
+  "universal_33": [
+    "ZNF460"
+  ],
+  "universal_34": [
+    "ZNF136",
+    "ZNF680",
+    "Stat5a"
+  ],
+  "universal_35": [
+    "NR1H2::RXRA",
+    "NR2F2",
+    "RARA",
+    "Rarb",
+    "Rarg",
+    "NR2F1",
+    "Nr2F6",
+    "NR4A1",
+    "Nr2f6",
+    "TCF7L1",
+    "ESRRB",
+    "PPARD",
+    "RXRG",
+    "Rxra",
+    "THRB",
+    "PPARA::RXRA",
+    "Rarb",
+    "Hnf1A",
+    "RXRB",
+    "NR2F1",
+    "ESRRA",
+    "NR2C2"
+  ],
+  "universal_36": [
+    "E2F1",
+    "E2F3",
+    "E2F4",
+    "E2F2",
+    "ZNF417",
+    "NFIA"
+  ],
+  "universal_37": [
+    "PLAGL2",
+    "ZNF320",
+    "ZNF692",
+    "CTCFL",
+    "PLAG1"
+  ],
+  "universal_38": [
+    "ZKSCAN1"
+  ],
+  "universal_39": [
+    "ZNF768"
+  ],
+  "universal_40": [
+    "GATA6",
+    "TRPS1",
+    "Mecom",
+    "GATA2",
+    "GATA4",
+    "Gata3"
+  ],
+  "universal_41": [
+    "ZBTB7B",
+    "ZBTB7C"
+  ],
+  "universal_42": [
+    "NFYB"
+  ]
+}

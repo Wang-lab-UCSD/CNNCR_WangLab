@@ -1,0 +1,2 @@
+metric,n_universal,median_universal,n_background,median_background,mannwhitney_U,p_value
+gnomAD RMC oe_mis at DBD,81,0.40522,268,0.5011377419354839,7966.5,0.00028538299346006984

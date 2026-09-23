@@ -19,7 +19,7 @@ with the command that produced them documented and, where feasible, runnable beh
 ## Setup
 
 ```bash
-git clone https://github.com/<org>/CNN-CR-core-regulators.git && cd CNN-CR-core-regulators
+git clone https://github.com/shen420/CNNCR_WangLab.git && cd CNNCR_WangLab
 conda env create -f environment.yml          # ~15 min; needs conda >= 23.10 (libmamba solver) or mamba/micromamba. CPU-only: replace pytorch-cuda=11.8 by cpuonly
 conda activate cnncr
 python bin/setup_work_dir.py --enhancer-root /abs/path/work    # creates the work directory and points the scripts at it

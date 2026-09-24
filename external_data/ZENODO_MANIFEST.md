@@ -1,4 +1,4 @@
-# Zenodo archives (DOI to be added)
+# Zenodo archives: https://doi.org/10.5281/zenodo.22945154
 
 Seven gzip-compressed tar archives, 9.0 GB in total; each unpacks into the work directory (`tar -xzf <archive> -C $ENHANCER_ROOT`;
 `multi_agent/` inside an archive is the repository's `code/`). Every archive carries a `README.txt` describing its files; three archives are deposited as 0.9 GB pieces (see **Split archives** below). Nothing else has

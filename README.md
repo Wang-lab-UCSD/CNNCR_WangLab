@@ -63,7 +63,7 @@ motif de-replication and the count matrices, the released K562 model and predict
 (JASPAR 2022 CORE vertebrates, CIS-BP 2.0 human, Epimotifs), gene lists and TSS, the biosample tables (Supplementary Tables ST2, ST3),
 the ENCODE accession table. Per-analysis result tables that the panels read ship in place under `code/<analysis>/results/`.
 
-**On Zenodo** (DOI to be added; `external_data/ZENODO_MANIFEST.md`): seven archives, one to three per figure, 9 GB in total, unpacked
+**On Zenodo** (https://doi.org/10.5281/zenodo.22945154; `external_data/ZENODO_MANIFEST.md`): seven archives, one to three per figure, 9 GB in total, unpacked
 into the work directory (three of them are deposited as 0.9 GB pieces to be joined with `cat`, see the manifest). Every large input of every notebook is there, including the outputs of every step too slow for a notebook.
 
 **ENCODE** (not redistributed): the 1,348 TF ChIP-seq IDR-thresholded peak files of K562, HepG2, A549, GM12878, MCF-7 and HEK293 listed in

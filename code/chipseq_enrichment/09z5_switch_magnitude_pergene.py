@@ -48,7 +48,8 @@ from scipy import stats
 ARGS = [a for a in sys.argv[1:] if not a.startswith("-")]
 TAG = ARGS[0] if ARGS else "top90chip"
 BIND_FILE = {"top10chip": "reader_binding.parquet",
-             "top90chip": "reader_binding_top90.parquet"}[TAG]
+             "top90chip": "reader_binding_top90.parquet",
+             "allchip": "reader_binding_all.parquet"}[TAG]
 MIN_GENES = 300          # motif target set size, as in 09x
 MIN_OK = 50              # usable target genes per factor x motif, as in 09x
 TRIM = 0.10              # robustness column only, never the primary

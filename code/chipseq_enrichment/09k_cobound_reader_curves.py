@@ -36,7 +36,8 @@ import matplotlib.pyplot as plt
 
 TAG = next((a for a in sys.argv[1:] if not a.startswith("-")), "top90chip")
 BIND_FILE = {"top10chip": "reader_binding.parquet",
-             "top90chip": "reader_binding_top90.parquet"}[TAG]
+             "top90chip": "reader_binding_top90.parquet",
+             "allchip": "reader_binding_all.parquet"}[TAG]
 MIN_GENES = 100       # a panel needs this many genes bound by at least one reader
 MIN_READERS = 2
 MIN_READER_SET = 1    # no minimum: every reader with any ChIP target gene at this motif
@@ -212,6 +213,8 @@ print(f"  median log2(ON/OFF) over all readers shown: {D.log2_on_over_off.median
 # ---- plot cache: everything draw() needs, so a restyle is a seconds-long replot ----------------
 _cache = [dict(cell=p["cell"], motif=p["motif"], readers=list(p["readers"]),
                n=len(p["genes"]), w=p["w"],
+               genes=[p["genes"][i] for i in p["order"]],          # 2026-10-05: gene IDs in the drawn order, for audit
+
                curves={r: np.asarray(p["E"][r][p["order"]], dtype=np.float32)
                        for r in p["readers"]})
           for p in panels]

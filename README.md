@@ -20,13 +20,23 @@ with the command that produced them documented and, where feasible, runnable beh
 
 ```bash
 git clone https://github.com/Wang-lab-UCSD/CNNCR_WangLab.git && cd CNNCR_WangLab
-conda env create -f environment.yml          # ~15 min; needs conda >= 23.10 (libmamba solver) or mamba/micromamba. CPU-only: replace pytorch-cuda=11.8 by cpuonly
+conda env create -f environment.yml          # ~15 min; conda >= 23.10, or conda 23.9 with --solver=libmamba, or mamba/micromamba. CPU-only: replace pytorch-cuda=11.8 by cpuonly
 conda activate cnncr
 python bin/setup_work_dir.py --enhancer-root /abs/path/work    # creates the work directory and points the scripts at it
 jupyter lab notebooks/                        # start with 00_setup_and_data
 ```
 Then unpack into the work directory the Zenodo archives the notebooks you want need (`external_data/ZENODO_MANIFEST.md`), and for
 notebooks 08, 10 and 11 download the ENCODE peak files (`python bin/download_encode_peaks.py --dest /abs/path/work/encode4_tf_chipseq`, 1 GB).
+
+```bash
+tar --keep-directory-symlink -xzf <archive> -C /abs/path/work
+```
+`--keep-directory-symlink` is required: the work directory's `multi_agent/` is a symlink to this repository's `code/`, and without the
+flag GNU tar replaces it with a real directory, so the archived files never reach `code/` and notebooks 06, 08, 10 and 11 report
+missing inputs. To repair a work directory where that already happened, rerun `bin/setup_work_dir.py` with `--repair-multi-agent`.
+
+`bin/setup_work_dir.py` rewrites the archived scripts' two absolute development roots **in place** (`bin/rewrite_paths.py`, keeping
+`.orig` copies), so run it on your own clone rather than on a checkout shared with others.
 
 Tested on Linux (RHEL 8) with the environment built by micromamba 2.9; the `cnncr` environment holds Python 3.9, PyTorch 2.2 (CUDA 11.8),
 the MEME suite 5.5.9 (TOMTOM), bedtools, pyBigWig and the usual scientific stack. Notebooks 01, 05 and 09 train networks and want one
@@ -37,24 +47,35 @@ NVIDIA GPU (they run on a CPU, an hour or more); everything else is CPU.
 | notebook | figure | what it does | inputs beyond the repository | hardware, time |
 |---|---|---|---|---|
 | `00_setup_and_data` | | environment check, work directory, which archive each notebook needs | | |
-| `01_train_cnncr` | 1c,d | window FASTA of K562 (shipped) -> one-hot tensor -> train and test the cell-type-specific CNN-CR | none (other biosamples: `fig1_training_inputs_all116`) | GPU, 85 min per model |
+| `01_train_cnncr` | 1c,d | window FASTA of K562 (shipped) -> one-hot tensor -> train and test the cell-type-specific CNN-CR | none (other biosamples: `fig1_training_inputs_all116`) | GPU, 70 min per model |
 | `02_motif_extraction_and_analysis` | 1e,f | extract the trained model's motifs; merge the ten K562 models' motifs into the non-redundant K562 set (shipped TOMTOM tables); motif yield and catalogue concordance of all 116 biosamples | `fig1_motif_sets_all116` (part 3 only) | GPU 10 min + CPU 15 min |
 | `03_linear_model` | 1h | K562 motif-count matrices (shipped) -> ridge model -> held-out predictions | none | CPU, 2 min |
-| `04_core_motifs` | 2a-c | the 43 core motifs start to end from the per-biosample motifs of the 116 biosamples; JASPAR readers; control motif sets | `fig2_core_motif_derivation` | CPU, 20 min |
+| `04_core_motifs` | 2a-c | the 43 core motifs start to end from the per-biosample motifs of the 116 biosamples; JASPAR readers; control motif sets | `fig2_core_motif_derivation` | CPU, 80 min |
 | `05_core43_cnncr` | 2e | the 43-motif (motif-initialised) CNN-CR trained and tested start to end on K562 | none | GPU, 3 min |
-| `06_fig3_conservation` | 3c-h | phyloP at core-motif sites versus ten control sets (K562 demonstration on the phyloP subset, all 116 from shipped summaries); reader-protein constraint | `fig3_conservation_inputs` | CPU, 5 min |
-| `07_eqtl_variants` | 4a,b | fine-mapped causal eQTLs at core versus control motif sites in 16 GTEx tissues | `fig4_eqtl_inputs` | CPU, 10 min |
-| `08_chipseq_occupancy` | 4d | ENCODE TF ChIP-seq peaks -> fraction of each TF's TSS-proximal peaks with a core versus control site (five cell lines) | ENCODE peaks, `fig4_fig5_motif_sites_on_peaks` | CPU, 15 min |
-| `09_hek293_heldout` | 4e | HEK293, a line the model never saw: linear, random forest and the 43-motif CNN-CR on the shipped HEK293 windows | none | GPU, 10 min |
-| `10_reader_sites_chipseq` | 5b,c | which candidate reader TF binds each shared core-motif site in five cell lines, and how often the strongest binder switches | ENCODE peaks, `fig5_reader_switch_inputs` | CPU, 5 min |
-| `11_reader_switching_perturbseq` | 5d-g | reader dominance within K562 and HEK293T and switching between them, from the quantile-normalised Perturb-seq screens | ENCODE peaks, `fig5_reader_switch_inputs`, `fig4_fig5_motif_sites_on_peaks` | CPU, 10 min |
+| `06_fig3_conservation` | 3c-h | phyloP at core-motif sites versus ten control sets (K562 demonstration on the phyloP subset, all 116 from shipped summaries); reader-protein constraint | `fig3_conservation_inputs` | CPU, 20 min |
+| `07_eqtl_variants` | 4a,b | fine-mapped causal eQTLs at core versus control motif sites in 16 GTEx tissues | `fig4_eqtl_inputs` | CPU, 35 min |
+| `08_chipseq_occupancy` | 4d | ENCODE TF ChIP-seq peaks -> fraction of each TF's TSS-proximal peaks with a core versus control site (five cell lines) | ENCODE peaks, `fig4_fig5_motif_sites_on_peaks` | CPU, 50 min |
+| `09_hek293_heldout` | 4e | HEK293, a line the model never saw: linear, random forest and the 43-motif CNN-CR on the shipped HEK293 windows | none | GPU, 11 min |
+| `10_reader_sites_chipseq` | 5b,c | which candidate reader TFs bind each core-motif copy in a cell line's own promoter windows, which reader is bound at the most genes, and how often the bound readers differ between two cell lines | ENCODE peaks, `fig5_reader_switch_inputs` | CPU, 15 min |
+| `11_reader_switching_perturbseq` | 5d-g | reader dominance within K562 and HEK293T and switching between them, from the quantile-normalised Perturb-seq screens; panel f draws every reader of a motif | ENCODE peaks, `fig5_reader_switch_inputs`, `fig4_fig5_motif_sites_on_peaks` | CPU, 45 min |
+
+Times are wall clock on one node with each notebook run alone (RHEL 8, RTX A6000); the single-threaded steps dominate
+(`06_universal_regulators.py` in notebook 04, `snp_overlap_universal.py` in 07, `09_pool_enrichment.py` in 08).
+
+The notebooks ship without stored outputs. **`notebooks/EXPECTED_OUTPUTS.md`** lists what each one should print, so a run can be
+checked value by value, and says which numbers can move between runs and why.
 
 Every notebook was executed end to end from a fresh clone before release and reproduces the corresponding numbers of the paper; where a
 regenerated value can differ from the published one (GPU arithmetic in training, a newer MEME-suite version in TOMTOM, one more ENCODE
 experiment per cell line than at publication) the notebook says so and prints both.
 
 Not reproduced here: Fig. 1a,b,g (schematics and the top-50 motif composition), Fig. 3a,b (CG and information content of the MEME files),
-Fig. 4c,f,g and the synovial-fibroblast half of 4e (patient data are controlled access), Fig. 5a (schematic).
+Fig. 4c,f,g and the synovial-fibroblast half of 4e (patient data are controlled access), Fig. 5a (schematic), the simulated-data
+positive control of Section 2 (Supplementary Fig. S5: CNN-CR trained on dinucleotide-shuffled promoters with motifs embedded), and
+the supplementary figures.
+
+Known harmless warnings: PyTorch 2.2 prints a one-time cuDNN `install nvrtc.so` notice on the first GPU call, and
+`combine_motifs_1.py enh` prints `RuntimeWarning: invalid value encountered in divide` for PWM columns that are constant.
 
 ## Data
 

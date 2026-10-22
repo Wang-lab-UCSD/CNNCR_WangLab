@@ -44,7 +44,8 @@ ARGS = [a for a in sys.argv[1:] if not a.startswith("-")]
 TAG = ARGS[0] if ARGS else "top90chip"
 REPLOT = "--replot" in sys.argv          # redraw from the cache, skipping the 10-minute load
 BIND_FILE = {"top10chip": "reader_binding.parquet",
-             "top90chip": "reader_binding_top90.parquet"}[TAG]
+             "top90chip": "reader_binding_top90.parquet",
+             "allchip": "reader_binding_all.parquet"}[TAG]
 MIN_GENES = 300
 N_EX = 4                # example panels per row
 N_CACHE = 12            # example curves kept per group, so the figure can be redrawn offline

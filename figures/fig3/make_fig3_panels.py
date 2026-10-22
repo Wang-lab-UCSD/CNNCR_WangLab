@@ -37,12 +37,13 @@ Exact P-values (Mann–Whitney two-sided; sign test for e) are computed here and
 PRINTED directly on each panel — no significance stars.
 
 Data: a/b cg_ic_per_motif.csv; c/e conservation_aggregate.csv;
-      d  code/results/motif_conservation_cg.csv + motif_cg_ancova.csv   (04_*.py)
+      d  the ten-control-set tables under conservation_sequence/results/oldpool10/ + cisbp_cg_ic.csv
       f  code/results/constraint_comparison_extended.csv                (03_*.py)
       g  conservation_protein dbd_oe_scores.csv
       h  code/results/family_reader_constraint.csv                     (07_*.py)
 """
 import os
+import glob as _glob
 import numpy as np, pandas as pd
 from scipy.stats import mannwhitneyu, binomtest, kruskal
 import matplotlib; matplotlib.use("Agg")
@@ -50,8 +51,15 @@ import matplotlib.pyplot as plt
 from matplotlib.path import Path
 from matplotlib.patches import PathPatch
 
+# Register the Liberation Sans copies shipped in figures/fonts/ so the panels do not depend on a
+# system Arial. Many system "Arial" builds lack the Unicode superscript glyphs (U+207B, U+2070), which
+# is why exponents are drawn with mathtext below rather than with superscript characters.
+from matplotlib import font_manager as _fm
+_FONTS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "fonts")
+for _f in _glob.glob(os.path.join(_FONTS, "LiberationSans-*.ttf")): _fm.fontManager.addfont(_f)
 plt.rcParams.update({"font.family": "sans-serif",
-                     "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
+                     "font.sans-serif": ["Arial", "Liberation Sans", "Helvetica", "DejaVu Sans"],
+                     "mathtext.default": "regular", "mathtext.fontset": "dejavusans",
                      "pdf.fonttype": 42, "ps.fonttype": 42, "svg.fonttype": "none"})
 
 SD   = os.path.dirname(os.path.abspath(__file__))
@@ -62,8 +70,6 @@ DBD  = f"{MA}/conservation_protein/results/dbd_oe_scores.csv"
 CC   = f"{SD}/code/results/constraint_comparison_extended.csv"   # 3 published + syn-z control
 FAM  = f"{SD}/code/results/family_constraint.csv"
 FAMR = f"{SD}/code/results/family_reader_constraint.csv"
-MCG  = f"{SD}/code/results/motif_conservation_cg.csv"   # single-control version (superseded)
-MCGA = f"{SD}/code/results/motif_cg_ancova.csv"          # single-control version (superseded)
 # TEN control sets (2026-09-05): panels c, d, e now use the same ten old-pool control sets as
 # Fig 4a/b (posthoc_analysis/results/control_motifs_set_{0..9}.meme), scored from one pool-wide
 # FIMO scan by conservation_sequence/07_oldpool_10sets.py. c and d pool the 141 distinct control
@@ -130,14 +136,15 @@ PANEL = (1.80, 2.27)
 RNG = np.random.default_rng(7)
 
 # ── p-value formatting ─────────────────────────────────────────────────────────
-SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"}
 def fmtp(p):
-    if p <= 0 or p < 1e-300: return "P < 10" + "".join(SUP[c] for c in "-300")
+    """Exponents as mathtext ($10^{-5}$), not Unicode superscripts: a system Arial without
+    U+207B renders those as empty boxes (the numbers stay right, the label does not)."""
+    if p <= 0 or p < 1e-300: return "P < $10^{-300}$"
     if p >= 0.10:  return f"P = {p:.2f}"
     if p >= 0.05:  return f"P = {p:.3f}"      # 0.058 must not render as "0.06"
     if p >= 1e-3:  return f"P = {p:.3f}".rstrip("0")
     e = int(np.floor(np.log10(p))); m = p / 10**e
-    return f"P = {m:.1f}×10" + "".join(SUP[c] for c in str(e))
+    return f"P = {m:.1f}\u00d7$10^{{{e}}}$"
 def mwp(a, b): return mannwhitneyu(a, b, alternative="two-sided").pvalue
 
 def chrome(ax, ylab):

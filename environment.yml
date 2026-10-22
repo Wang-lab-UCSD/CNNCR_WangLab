@@ -2,6 +2,7 @@
 # CNN_CR_pytorch/py3.9+cu118, parm_env/py3.13; the versions below are the ones the figures were made with).
 # Build:  conda env create -f environment.yml
 #         mamba/micromamba solve this in ~1 min; conda's classic solver can take much longer.
+#         conda 23.9 works with --solver=libmamba.
 # GPU:    the pytorch build targets CUDA 11.8; for CPU-only replace "pytorch-cuda=11.8" by "cpuonly".
 name: cnncr
 channels:
@@ -9,6 +10,8 @@ channels:
   - nvidia
   - bioconda
   - conda-forge
+  - nodefaults          # required: without it conda adds `defaults` from your .condarc and the
+                        # transaction fails with ClobberErrors (defaults::libkrb5 vs conda-forge::krb5)
 dependencies:
   - python=3.9
   - pip

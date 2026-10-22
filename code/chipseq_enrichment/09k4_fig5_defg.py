@@ -160,6 +160,45 @@ for m, c, _ in PICKS:
     lead_wins = (a > b2)                     # per gene, in the panel's x order
     win = float(lead_wins[ok].mean())
     P = stats.wilcoxon(a[ok], b2[ok]).pvalue
+    print("hello world")
+    # ---- trace of every intermediate quantity behind P (2026-10-05, written for the user's audit) ----
+    _tr = open(f"{OUT}/wilcoxon_trace_{TAG}_{SHORT(m)}_{c}.txt", "w")
+    _d = a[ok] - b2[ok]
+    _nz = _d != 0
+    _dn = _d[_nz]
+    _r = stats.rankdata(np.abs(_dn))
+    _Wp, _Wm = float(_r[_dn > 0].sum()), float(_r[_dn < 0].sum())
+    _n = int(_nz.sum())
+    _mu = _n * (_n + 1) / 4
+    _ties = np.unique(np.abs(_dn), return_counts=True)[1]
+    _sig = np.sqrt(_n * (_n + 1) * (2 * _n + 1) / 24 - ((_ties ** 3 - _ties).sum()) / 48)
+    _W = min(_Wp, _Wm)
+    _z = (_W - _mu) / _sig                       # scipy 'wilcox' / approx: no continuity correction here
+    _z_cc = (_W - _mu + 0.5) / _sig              # with continuity correction (scipy's default, correction=True in old versions)
+    _P_norm = 2 * stats.norm.sf(abs(_z)); _P_cc = 2 * stats.norm.sf(abs(_z_cc))
+    _tr.write(f"hello world\n\nPanel: motif {m} ({SHORT(m)}), cell line {c}\n")
+    _tr.write(f"leader = {order[0]}, runner-up = {order[1]}\n")
+    _tr.write(f"genes in panel = {len(a)}; genes with finite values for both readers (n used) = {int(ok.sum())}\n")
+    _tr.write(f"median |effect| leader = {np.median(a[ok]):.6f}, runner-up = {np.median(b2[ok]):.6f}, ratio = {np.median(a[ok])/np.median(b2[ok]):.4f}\n")
+    _tr.write(f"genes where leader > runner-up = {int(lead_wins[ok].sum())} of {int(ok.sum())} = {100*win:.2f}%\n")
+    _tr.write(f"genes where leader < runner-up = {int((a[ok] < b2[ok]).sum())}; ties (difference exactly 0) = {int((~_nz).sum())}\n")
+    _tr.write(f"per-gene difference d = leader - runner-up: mean {np.mean(_d):.6f}, median {np.median(_d):.6f}, sd {np.std(_d, ddof=1):.6f}\n")
+    _tr.write(f"\nWilcoxon signed-rank (paired, two-sided), ties dropped: n = {_n}\n")
+    _tr.write(f"  sum of ranks of positive differences W+ = {_Wp:.1f}\n  sum of ranks of negative differences W- = {_Wm:.1f}\n")
+    _tr.write(f"  check: W+ + W- = {_Wp+_Wm:.1f} = n(n+1)/2 = {_n*(_n+1)/2:.1f}\n")
+    _tr.write(f"  test statistic W = min(W+, W-) = {_W:.1f}\n")
+    _tr.write(f"  null mean  mu = n(n+1)/4 = {_mu:.1f}\n")
+    _tr.write(f"  null s.d. sigma = sqrt(n(n+1)(2n+1)/24 - tie correction) = {_sig:.3f}\n")
+    _tr.write(f"  z = (W - mu) / sigma = {_z:.3f}   (with continuity correction: {_z_cc:.3f})\n")
+    _tr.write(f"  two-sided P from the normal approximation = {_P_norm:.3e}   (with continuity correction: {_P_cc:.3e})\n")
+    _tr.write(f"  scipy.stats.wilcoxon(a, b).pvalue = {P:.3e}   (scipy {__import__('scipy').__version__})\n")
+    _tr.write(f"\nsign test on {int(lead_wins[ok].sum())} wins of {int(ok.sum())}: two-sided P = {stats.binomtest(int(lead_wins[ok].sum()), int(ok.sum())).pvalue:.3e}\n")
+    _tr.write(f"paired t-test two-sided P = {stats.ttest_rel(a[ok], b2[ok]).pvalue:.3e}\n")
+    _tr.write("\nfirst 20 genes (panel order): leader, runner-up, difference, rank of |difference| (ties dropped)\n")
+    _idx = np.where(ok)[0][:20]
+    for _i in _idx:
+        _tr.write(f"  {a[_i]:.6f}  {b2[_i]:.6f}  {a[_i]-b2[_i]:+.6f}\n")
+    _tr.close()
     DSTAT[(m, c)] = dict(order=order, med=med, lo=lo, hi=hi, win=win, P=P, n=int(ok.sum()),
                          wins=lead_wins, ok=ok)
     print(f"  d {SHORT(m):4} {c:7} {order[0]} over {order[1]} at {100 * win:.1f}% of "
@@ -393,13 +432,12 @@ for i, r in enumerate(main.itertuples(index=False)):
     if i // 2 == 1:
         ax.set_xlabel("genes by mean reader effect", color=INK, labelpad=1.5)
 
-# ---- g: switch magnitude vs the matched background
-gg = row2[1].subgridspec(2, 1, height_ratios=[1.45, 1.0], hspace=0.08)
+# ---- g: switch magnitude per reader (2026-10-04: control background REMOVED at the professor's request;
+#         the panel now reports the observed switch of each pair, not a comparison with other TFs)
+gg = row2[1].subgridspec(2, 1, height_ratios=[1.45, 1.0], hspace=0.30)
 XMAX = max(2.30, G.mag.max() * 1.12)
 order = list(pick.motif)
 ax = fig.add_subplot(gg[0])
-ax.axvline(MED_C, color=SUB, lw=0.7, ls=(0, (2.5, 1.8)), alpha=0.6, zorder=0)
-ax.axvline(MED_R, color=INK, lw=0.8, alpha=0.45, zorder=0)
 CLOSE = 0.17 * XMAX
 for i, m in enumerate(order):
     yy = len(order) - 1 - i
@@ -412,52 +450,39 @@ for i, m in enumerate(order):
         ha, dx = (("right", -2.0) if j == 0 else ("left", 2.0)) if tight else ("center", 0.0)
         ax.annotate(xr.factor, (xr.mag, yy), textcoords="offset points",
                     xytext=(dx, 4.6), ha=ha, va="baseline", fontsize=FS_SM, color=c, zorder=5)
-    fam = FAMILY_NAME.get(m, "")
     ax.text(-0.012, yy, SHORT(m), ha="right", va="center", fontsize=FS_TICK, color=INK,
             transform=ax.get_yaxis_transform())
 ax.set_xlim(0, XMAX)
 ax.set_ylim(-0.55, len(order) - 0.15)
 ax.set_yticks([])
-for sp in ("top", "right", "left", "bottom"):
+for sp in ("top", "right", "left"):
     ax.spines[sp].set_visible(False)
-ax.tick_params(bottom=False, labelbottom=False)
-# a percentile axis read straight off the background distribution itself
-_cs = np.sort(ctrl)
-_qq = np.linspace(0, 100, len(_cs))
-sec = ax.secondary_xaxis("top", functions=(lambda v: np.interp(v, _cs, _qq),
-                                           lambda q: np.interp(q, _qq, _cs)))
-sec.set_xticks([25, 50, 75, 90, 99])
-sec.set_xlabel("percentile among the background TFs", fontsize=FS_SM, color=SUB, labelpad=1.5)
-sec.tick_params(labelsize=FS_SM, colors=SUB, labelcolor=INK, pad=1.2, width=0.5, length=2)
-sec.spines["top"].set_linewidth(0.5)
-sec.spines["top"].set_color(MUT)
+ax.spines["bottom"].set_linewidth(0.5); ax.spines["bottom"].set_color(MUT)
+ax.set_xticks([0, 0.5, 1.0, 1.5, 2.0])
+ax.set_xticklabels([f"{2**v:.1f}×" for v in [0, 0.5, 1.0, 1.5, 2.0]])
+ax.tick_params(labelsize=FS_SM, colors=SUB, labelcolor=INK, pad=1.2, width=0.5, length=2)
+ax.set_xlabel("switch magnitude, fold difference of knockout effect between K562 and HEK293T", labelpad=1.5)
 ax.legend(handles=[
     Line2D([], [], marker="o", ls="none", ms=4, mfc=K_COL, mec="white", label="K562-leaning reader"),
     Line2D([], [], marker="o", ls="none", ms=4, mfc=H_COL, mec="white", label="HEK293T-leaning reader")],
     frameon=False, loc="lower right", fontsize=FS_SM, handletextpad=0.4, borderaxespad=0.1)
 
-axd = fig.add_subplot(gg[1], sharex=ax)
-kde = stats.gaussian_kde(ctrl)
-xx = np.linspace(0, XMAX, 400)
-yy = kde(xx)
-axd.fill_between(xx, 0, yy, color=BG, lw=0, zorder=1)
-axd.plot(xx, yy, color=SUB, lw=0.6, zorder=2)
-axd.axvline(MED_C, color=SUB, lw=0.7, ls=(0, (2.5, 1.8)), zorder=3)
-axd.axvline(MED_R, color=INK, lw=0.8, zorder=3)
-for xr in G.itertuples(index=False):
-    c = K_COL if xr.side == "K" else H_COL
-    axd.plot([xr.mag, xr.mag], [0, kde(xr.mag)[0]], color=c, lw=0.7, alpha=0.6, zorder=4)
-axd.set_ylim(0, yy.max() * 1.18)
-axd.set_yticks([])
-axd.set_xlim(0, XMAX)
-axd.set_xlabel("switch magnitude, |mean over genes of log₂ K562 / HEK293T|", labelpad=1.5)
-axd.set_ylabel(f"{len(ctrl)} background TFs", color=SUB, labelpad=3)
-strip(axd, left=False)
-axd.text(MED_C + 0.012 * XMAX, yy.max() * 1.02, f"background median {2**MED_C:.2f}×",
-         ha="left", va="top", fontsize=FS_SM, color=SUB)
-axd.text(MED_R + 0.012 * XMAX, yy.max() * 0.80,
-         f"reader median {2**MED_R:.2f}×, {int((G.mag > MED_C).sum())} of {len(G)} above",
-         ha="left", va="top", fontsize=FS_SM, color=INK)
+# lower part: the pair separation (fold between the two readers' cross-line ratios), one bar per motif
+axd = fig.add_subplot(gg[1])
+sep = []
+for m in order:
+    r = pick[pick.motif == m].iloc[0]
+    sep.append(2 ** abs(float(r.log2_K) - float(r.log2_H)))
+ypos = np.arange(len(order))[::-1]
+axd.barh(ypos, sep, height=0.62, color=BG, edgecolor=SUB, lw=0.5, zorder=2)
+for yv, s, m in zip(ypos, sep, order):
+    axd.text(s + 0.08, yv, f"{s:.1f}×", va="center", ha="left", fontsize=FS_SM, color=INK)
+axd.set_yticks(ypos); axd.set_yticklabels([SHORT(m) for m in order], fontsize=FS_TICK, color=INK)
+axd.set_xlim(0, max(sep) * 1.25)
+axd.set_xlabel("separation between the two readers of a pair (fold)", labelpad=1.5)
+strip(axd, left=True)
+print(f"g: {len(G)} readers, switch magnitude {2**G.mag.min():.2f}x to {2**G.mag.max():.2f}x (median {2**MED_R:.2f}x); "
+      f"pair separation {min(sep):.1f}x to {max(sep):.1f}x; {int(pick.reciprocal.sum())}/{len(pick)} pairs reciprocal")
 
 # ================================================================== letters + headers
 Y1, Y2 = 0.992, 0.487
@@ -465,8 +490,6 @@ head(fig, 0.004, Y1, "d", "Reader curves")
 head(fig, 0.578, Y1, "e", "Reader dominance")
 head(fig, 0.004, Y2, "f", "Cross-line switch")
 head(fig, 0.545, Y2, "g", "Switch magnitude")
-fig.text(0.995, Y2, f"P, reader switch > control switch = {P_MWU:.3f}",
-         fontsize=FS_SM, color=INK, va="top", ha="right")
 
 # ================================================================== save
 os.makedirs(FIG, exist_ok=True)

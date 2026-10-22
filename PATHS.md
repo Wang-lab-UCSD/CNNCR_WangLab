@@ -18,7 +18,7 @@ the scripts (`bin/rewrite_paths.py`; a `.orig` copy of each rewritten script is 
 | `motif_analysis/TF_Information.txt`, `motif_analysis/CISBP_motifs.meme` | `data/motifs/CISBP_TF_Information.txt`, `CISBP_human_motifs.meme` |
 | `paper_figures/fig1`, `fig3`, `fig4`, `fonts` | `figures/` |
 
-## Unpacked into `$ENHANCER_ROOT` from Zenodo (`tar -xzf <archive> -C $ENHANCER_ROOT`)
+## Unpacked into `$ENHANCER_ROOT` from Zenodo (`tar --keep-directory-symlink -xzf <archive> -C $ENHANCER_ROOT`)
 | archive | paths it creates | notebooks |
 |---|---|---|
 | `fig1_training_inputs_all116` | `fig1_training_inputs/{BSSID}.windows.fa.gz`, `{BSSID}.expression.tsv` | 01, 02, 05 for biosamples other than K562 (K562 ships in `data/k562_demo/`) |

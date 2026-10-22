@@ -20,8 +20,8 @@ import numpy as np, pandas as pd
 from lib.config import JASPAR, BEDTOOLS, OUT, norm
 from lib.peaks import read_narrowpeak, tf_beds
 
-PCTL = 10          # keep peaks >= this within-TF percentile  ->  TOP 90%
-TAG  = "top90"
+PCTL = float(sys.argv[1]) if len(sys.argv) > 1 else 10   # keep peaks >= this within-TF percentile (10 -> top 90%; 0 -> ALL peaks)
+TAG  = sys.argv[2] if len(sys.argv) > 2 else "top90"      # 2026-10-01: `python 09e_reader_binding_pctl.py 0 all` builds reader_binding_all.parquet
 LINES = ["K562", "HEK293"]
 
 CAND = {m: {norm(t) for t in tfs} for m, tfs in json.load(open(JASPAR)).items()}

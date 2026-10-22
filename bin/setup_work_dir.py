@@ -5,16 +5,48 @@
 
 Creates $ENHANCER_ROOT, links the repository's `code/` as $ENHANCER_ROOT/multi_agent and the small inputs shipped in `data/` and `figures/`
 at the paths the archived scripts expect (see PATHS.md), then runs bin/rewrite_paths.py. Rerun after moving the repository or the work directory.
-Zenodo archives are unpacked into $ENHANCER_ROOT afterwards (tar -xzf <archive> -C $ENHANCER_ROOT); ENCODE peaks: bin/download_encode_peaks.py."""
-import os, argparse, subprocess, sys
+Zenodo archives are unpacked into $ENHANCER_ROOT afterwards (tar --keep-directory-symlink -xzf <archive> -C $ENHANCER_ROOT); ENCODE peaks: bin/download_encode_peaks.py."""
+import os, argparse, subprocess, sys, shutil
 here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ap = argparse.ArgumentParser(); ap.add_argument("--enhancer-root", required=True); a = ap.parse_args()
+ap = argparse.ArgumentParser(); ap.add_argument("--enhancer-root", required=True)
+ap.add_argument("--repair-multi-agent", action="store_true",
+                help="if $ENHANCER_ROOT/multi_agent is a real directory (an archive was unpacked without "
+                     "--keep-directory-symlink), move its contents into the repository's code/ and restore the symlink")
+a = ap.parse_args()
 W = os.path.abspath(a.enhancer_root); os.makedirs(W, exist_ok=True)
 def ln(src, dst):
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     if os.path.islink(dst) or os.path.exists(dst): os.remove(dst) if not os.path.isdir(dst) or os.path.islink(dst) else None
     if not os.path.exists(dst): os.symlink(src, dst)
-ln(f"{here}/code", f"{W}/multi_agent")
+
+def merge_into(src_dir, dst_dir):
+    """Move every file of src_dir into dst_dir, keeping the directory tree. Returns the number of files moved."""
+    moved = 0
+    for root, _, files in os.walk(src_dir):
+        rel = os.path.relpath(root, src_dir)
+        out = dst_dir if rel == "." else os.path.join(dst_dir, rel)
+        os.makedirs(out, exist_ok=True)
+        for f in files:
+            shutil.move(os.path.join(root, f), os.path.join(out, f)); moved += 1
+    return moved
+
+# GNU tar replaces the multi_agent -> code/ symlink with a real directory unless it is given
+# --keep-directory-symlink, which strands every archived file outside code/ (see README).
+MA = f"{W}/multi_agent"
+if os.path.isdir(MA) and not os.path.islink(MA):
+    if a.repair_multi_agent:
+        n = merge_into(MA, f"{here}/code"); shutil.rmtree(MA)
+        print(f"repaired {MA}: moved {n} files into {here}/code and restored the symlink")
+    else:
+        sys.exit(f"""ERROR: {MA} is a real directory, not the symlink to {here}/code.
+A Zenodo archive was unpacked without --keep-directory-symlink, so its files never reached code/
+and notebooks 06, 08, 10 and 11 will report their inputs as missing. Fix it with
+
+    python bin/setup_work_dir.py --enhancer-root {W} --repair-multi-agent
+
+which moves those files into code/ and restores the symlink, and from now on unpack with
+    tar --keep-directory-symlink -xzf <archive> -C {W}""")
+ln(f"{here}/code", MA)
 for f in ("Epimap_BSSID_nondup.txt", "EpiMapID_Name_nonDup.txt", "EpiMapID_Name.txt", "mnemonic_mapping.tsv"): ln(f"{here}/data/biosamples/{f}", f"{W}/{f}")
 ln(f"{here}/data/biosamples/en_models_to_BSSID.csv", f"{W}/geuvadis/predixscan/en_models_to_BSSID.csv")
 for f in ("gene_ENSG.txt", "gene_ENSG_name.txt"): ln(f"{here}/data/genes/{f}", f"{W}/{f}")

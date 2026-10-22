@@ -46,7 +46,8 @@ ARGS = [a for a in sys.argv[1:] if not a.startswith("-")]
 TAG = ARGS[0] if ARGS else "top90chip"
 REPLOT = "--replot" in sys.argv
 BIND_FILE = {"top10chip": "reader_binding.parquet",
-             "top90chip": "reader_binding_top90.parquet"}[TAG]
+             "top90chip": "reader_binding_top90.parquet",
+             "allchip": "reader_binding_all.parquet"}[TAG]
 MIN_GENES = 300          # 09x/09w motif gene-set floor, unchanged
 NB = 20000               # null draws, as 09y
 NCTRL_CURVE = 2          # control factors kept per motif for the Figure 3 example panels

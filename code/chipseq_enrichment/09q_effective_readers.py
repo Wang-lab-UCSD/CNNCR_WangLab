@@ -35,7 +35,8 @@ import matplotlib.pyplot as plt
 
 TAG = sys.argv[1] if len(sys.argv) > 1 else "top90chip"
 BIND_FILE = {"top10chip": "reader_binding.parquet",
-             "top90chip": "reader_binding_top90.parquet"}[TAG]
+             "top90chip": "reader_binding_top90.parquet",
+             "allchip": "reader_binding_all.parquet"}[TAG]
 MIN_READER_SET, MIN_GENES, MIN_READERS, N_BOOT = 1, 100, 2, 400
 
 HERE = os.path.dirname(os.path.abspath(__file__))

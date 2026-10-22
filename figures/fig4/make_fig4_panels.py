@@ -27,6 +27,7 @@ Data sources:
         (5-fold RidgeCV recompute, identical to proof1 01_gene_wise_correlation.py)
 """
 import os, glob
+import glob as _glob
 import numpy as np, pandas as pd
 from scipy.stats import mannwhitneyu, wilcoxon, pearsonr
 from sklearn.linear_model import RidgeCV
@@ -39,8 +40,15 @@ from matplotlib.patches import Patch
 # Single font name (not "sans-serif"): matplotlib writes the resolved name into the
 # SVG, and a generic family makes PowerPoint substitute. Arial is absent on this box
 # so PDF/PNG rasterize with the DejaVu fallback, but the SVG asks for real Arial.
-plt.rcParams.update({"font.family": "Arial",
-                     "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
+# Register the Liberation Sans copies shipped in figures/fonts/ so the panels do not depend on a
+# system Arial. Many system "Arial" builds lack the Unicode superscript glyphs (U+207B, U+2070), which
+# is why exponents are drawn with mathtext below rather than with superscript characters.
+from matplotlib import font_manager as _fm
+_FONTS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "fonts")
+for _f in _glob.glob(os.path.join(_FONTS, "LiberationSans-*.ttf")): _fm.fontManager.addfont(_f)
+plt.rcParams.update({"font.family": "sans-serif",
+                     "font.sans-serif": ["Arial", "Liberation Sans", "Helvetica", "DejaVu Sans"],
+                     "mathtext.default": "regular", "mathtext.fontset": "dejavusans",
                      "pdf.fonttype": 42, "ps.fonttype": 42, "svg.fonttype": "none"})
 
 SD  = os.path.dirname(os.path.abspath(__file__))
@@ -72,13 +80,14 @@ INK, SUB, MUT, GRID, BASE = "#0b0b0b", "#52514e", "#8f8d88", "#e8e7e1", "#c3c2b7
 RNG = np.random.default_rng(7)
 
 # ── p-value formatting (identical to fig3) ──────────────────────────────────────
-SUP = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","-":"⁻"}
 def fmtp(p):
-    if p <= 0 or p < 1e-300: return "P < 10" + "".join(SUP[c] for c in "-300")
+    """Exponents as mathtext ($10^{-5}$), not Unicode superscripts: a system Arial without
+    U+207B renders those as empty boxes (the numbers stay right, the label does not)."""
+    if p <= 0 or p < 1e-300: return "P < $10^{-300}$"
     if p >= 0.05:  return f"P = {p:.2f}"
     if p >= 1e-3:  return f"P = {p:.3f}".rstrip("0")
     e = int(np.floor(np.log10(p))); m = p / 10**e
-    return f"P = {m:.1f}×10" + "".join(SUP[c] for c in str(e))
+    return f"P = {m:.1f}\u00d7$10^{{{e}}}$"
 
 def chrome(ax, ylab):
     ax.set_ylabel(ylab, fontsize=6, color=SUB)

@@ -1,13 +1,13 @@
 # Zenodo archives: https://doi.org/10.5281/zenodo.22945154
 
 Seven gzip-compressed tar archives, 9.0 GB in total; each unpacks into the work directory (`tar --keep-directory-symlink -xzf <archive> -C $ENHANCER_ROOT`;
-`multi_agent/` inside an archive is the repository's `code/`). Every archive carries a `README.txt` describing its files; three archives are deposited as 0.9 GB pieces (see **Split archives** below). Nothing else has
-to be downloaded except the ENCODE peak files (`bin/download_encode_peaks.py`).
+`multi_agent/` inside an archive is the repository's `code/`).
 
 **`--keep-directory-symlink` is not optional.** `$ENHANCER_ROOT/multi_agent` is a symlink to the repository's `code/`, and five of the
 archives contain a `multi_agent/` directory. Without the flag, GNU tar replaces that symlink with a real directory; the archived files
 then sit outside `code/`, and notebooks 06, 08, 10 and 11 report their inputs as missing. If that has already happened, repair it with
-`python bin/setup_work_dir.py --enhancer-root $ENHANCER_ROOT --repair-multi-agent`.
+`python bin/setup_work_dir.py --enhancer-root $ENHANCER_ROOT --repair-multi-agent`. Every archive carries a `README.txt` describing its files; three archives are deposited as 0.9 GB pieces (see **Split archives** below). Nothing else has
+to be downloaded except the ENCODE peak files (`bin/download_encode_peaks.py`).
 
 | archive | contents | GB | notebooks |
 |---|---|---|---|

@@ -34,3 +34,13 @@ supplementary figures.
 Known harmless warnings: PyTorch 2.2 prints a one-time cuDNN `install nvrtc.so` notice on the first
 GPU call, and `combine_motifs_1.py enh` prints `RuntimeWarning: invalid value encountered in divide`
 for PWM columns that are constant.
+
+Notebook 11 reads the quantile-normalised Perturb-seq vectors from `perturbseq_qn/` rather than the raw screens,
+which are not distributed. Those vectors are stored as float32, so a knockout effect can differ from the value the
+published run held in memory by about 2e-7. Measured consequence, checked by running `09k` both ways on the same
+machine: every curve holds exactly the same values (bit-identical as a set), the reader lists and rankings are
+identical in all 9 panels, `dominance_summary_8motifs_top90chip.csv` is byte-identical, and
+`union_dominance_8motifs_top90chip.csv` agrees to 9 significant figures. The one visible effect is that 2 of the
+22,064 drawn gene positions swap with their neighbour, because panel d orders genes by general perturbability and
+two genes in the K562 universal_1 panel are near-tied; after the 163-gene smoothing the panel applies, the largest
+difference anywhere in a drawn curve is 1.4e-3.

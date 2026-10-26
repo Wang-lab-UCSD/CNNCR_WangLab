@@ -26,7 +26,8 @@ Env: CNN_CR_pytorch (LD_LIBRARY_PATH+=$CONDA_PREFIX/lib), ~3 min local.
 """
 import os, csv, pickle, collections, re, json
 import numpy as np
-import anndata as ad
+# anndata is imported lazily inside the raw-screen fallback below: a released run reads the
+# precomputed quantile-normalised vectors instead and never needs it.
 from scipy.stats import wilcoxon
 
 ROOT   = "/stg3/data1/sam/enhancer_prediction"
@@ -131,73 +132,124 @@ def build_line(fimo, peaksets, want_motifs, inten_map):
     return dict(tf_peakids=tf_peakids, peak_genes=peak_genes, motif_peaks=motif_peaks, peak_inten=peak_inten)
 
 # ------------------------------------------------------------------ Perturb-seq loaders
-print("Loading K562 Perturb-seq ...", flush=True)
-A = ad.read_h5ad(K562_H5AD)
-Xk = A.X.toarray() if hasattr(A.X, "toarray") else np.asarray(A.X); Xk = Xk.astype(float)
-Xk[np.isinf(Xk)] = np.nan
-k_ensg = [str(g) for g in A.var.index]
-k_col = {g: i for i, g in enumerate(k_ensg)}
-k_sym = {str(gid): str(sym) for gid, sym in zip(A.var.index, A.var["gene_name"])}
-k_tf_rows = collections.defaultdict(list); k_tf_self = {}
-for i, name in enumerate(A.obs.index):
-    p = str(name).split("_"); sym = norm(p[1]); k_tf_rows[sym].append(i)
-    if len(p) >= 4 and p[-1] in k_col: k_tf_self[sym] = p[-1]
-_kraw = {}
-def k_delta_raw(tf):
-    if tf not in _kraw: _kraw[tf] = np.nanmean(Xk[k_tf_rows[tf], :], axis=0)
-    return _kraw[tf]
-_kcache = {}
-def k_delta(tf):
-    if tf not in _kcache: _kcache[tf] = qnormK(k_delta_raw(tf))
-    return _kcache[tf]
-def k_effkd(tf):
-    e = k_tf_self.get(tf)
-    if e is None: return True
-    return k_delta_raw(tf)[k_col[e]] < EFF_KD
-k_perturbed = set(k_tf_rows)
+# Two ways in, and the released one is the first.
+#
+#   QN  (used whenever perturbseq_qn/ is present, which is what the Zenodo archive ships)
+#       perturbseq_qn/perturbseq_qn_{K562,HEK293T}.npz hold the quantile-normalised knockout-
+#       effect vector of every perturbed gene on the two screens' shared gene axis, written by
+#       bin/zenodo_build/export_perturbseq_qn.py from the raw screens below. Everything
+#       downstream reads only k_delta / o_delta on that axis, so the raw screens are not needed
+#       to reproduce any Fig. 5d-g panel.
+#   RAW (fallback, development machine only)
+#       the original screens: Replogle's normalised bulk h5ad and the Orion matrix processed to
+#       the same form. Needed only to rebuild the QN vectors, and NOT distributed.
+QN_DIR = os.path.join(ROOT, "perturbseq_qn")
+USE_QN = all(os.path.exists(os.path.join(QN_DIR, f"perturbseq_qn_{s}.npz"))
+             for s in ("K562", "HEK293T"))
 
-print("Loading Orion HEK293T Perturb-seq ...", flush=True)
-O = np.load(ORION_NPZ, allow_pickle=True)
-Xo = O["X"]
-o_ensg = [str(x) for x in O["ensembl_id"]]
-o_sym  = {str(en): str(sy) for en, sy in zip(O["ensembl_id"], O["gene_name"])}
-o_col  = {g: i for i, g in enumerate(o_ensg)}
-o_pert = [norm(x) for x in O["perturbations"]]
-o_row  = {p: i for i, p in enumerate(o_pert)}
-o_effkd_mask = {norm(p): bool(e) for p, e in zip(O["perturbations"], O["effective_kd"])}
-def o_delta_raw(tf):
-    return Xo[o_row[tf], :]
-_ocache = {}
-def o_delta(tf):
-    if tf not in _ocache: _ocache[tf] = qnormH(o_delta_raw(tf))
-    return _ocache[tf]
-o_perturbed = set(o_pert)
+if USE_QN:
+    print("Loading quantile-normalised Perturb-seq vectors (the raw screens are not needed) ...", flush=True)
+    _QK = np.load(os.path.join(QN_DIR, "perturbseq_qn_K562.npz"), allow_pickle=True)
+    _QH = np.load(os.path.join(QN_DIR, "perturbseq_qn_HEK293T.npz"), allow_pickle=True)
+    assert list(_QK["genes"]) == list(_QH["genes"]), "the two QN files are on different gene axes"
+    # delta_qn is ALREADY on the shared axis, in sorted order, so k_col/o_col are the identity
+    # map over it. The chain builds kidx = [k_col[g] for g in sorted(shared)] and then indexes
+    # k_delta(tf)[kidx], which therefore returns exactly the raw path's vector.
+    _shl = [str(g) for g in _QK["genes"]]
+    shared = set(_shl)
+    k_ensg = o_ensg = list(_shl)
+    k_col = {g: i for i, g in enumerate(_shl)}
+    o_col = dict(k_col)
+    _ktf = [str(t) for t in _QK["tfs"]]
+    _otf = [str(t) for t in _QH["tfs"]]
+    _krow = {t: i for i, t in enumerate(_ktf)}
+    _orow = {t: i for i, t in enumerate(_otf)}
+    _KD, _HD = _QK["delta_qn"], _QH["delta_qn"]
+    k_perturbed, o_perturbed = set(_ktf), set(_otf)
+    k_sym = {str(a): str(b) for a, b in zip(_QK["sym_ensg"], _QK["sym_name"])}
+    o_sym = {str(a): str(b) for a, b in zip(_QH["sym_ensg"], _QH["sym_name"])}
+    _keff = {t: bool(e) for t, e in zip(_ktf, _QK["eff_kd"])}
+    o_effkd_mask = {t: bool(e) for t, e in zip(_otf, _QH["eff_kd"])}
+    # not cached: the matrices are already resident, and 09x walks several hundred control TFs
+    def k_delta(tf): return np.asarray(_KD[_krow[tf]], float)
+    def o_delta(tf): return np.asarray(_HD[_orow[tf]], float)
+    def k_effkd(tf): return _keff.get(tf, True)
+    _kraw = {}          # the raw path's cache; kept so 09x/09z5 can still call _kraw.clear()
+    _kcache, _ocache = {}, {}
+    THR = {"K": float(_QK["thr"]), "H": float(_QH["thr"])}
+    print(f"  {len(_shl):,} shared genes, {len(_ktf):,} K562 and {len(_otf):,} HEK293T perturbations")
+    print(f"  responsive-target threshold (P{STRONG_PCTL}): "
+          f"K562 >= {THR['K']:.3f}  HEK >= {THR['H']:.3f}")
 
-shared = set(k_col) & set(o_col)
-print(f"  {len(shared)} genes measured in both K562 and HEK293T")
+else:
+    import anndata as ad
+    print("Loading K562 Perturb-seq ...", flush=True)
+    A = ad.read_h5ad(K562_H5AD)
+    Xk = A.X.toarray() if hasattr(A.X, "toarray") else np.asarray(A.X); Xk = Xk.astype(float)
+    Xk[np.isinf(Xk)] = np.nan
+    k_ensg = [str(g) for g in A.var.index]
+    k_col = {g: i for i, g in enumerate(k_ensg)}
+    k_sym = {str(gid): str(sym) for gid, sym in zip(A.var.index, A.var["gene_name"])}
+    k_tf_rows = collections.defaultdict(list); k_tf_self = {}
+    for i, name in enumerate(A.obs.index):
+        p = str(name).split("_"); sym = norm(p[1]); k_tf_rows[sym].append(i)
+        if len(p) >= 4 and p[-1] in k_col: k_tf_self[sym] = p[-1]
+    _kraw = {}
+    def k_delta_raw(tf):
+        if tf not in _kraw: _kraw[tf] = np.nanmean(Xk[k_tf_rows[tf], :], axis=0)
+        return _kraw[tf]
+    _kcache = {}
+    def k_delta(tf):
+        if tf not in _kcache: _kcache[tf] = qnormK(k_delta_raw(tf))
+        return _kcache[tf]
+    def k_effkd(tf):
+        e = k_tf_self.get(tf)
+        if e is None: return True
+        return k_delta_raw(tf)[k_col[e]] < EFF_KD
+    k_perturbed = set(k_tf_rows)
 
-_shl = sorted(shared)
-_QCOLS = {id(Xk): np.array([k_col[g] for g in _shl]),
-          id(Xo): np.array([o_col[g] for g in _shl])} if QN_SHARED else {}
-if QN_SHARED: print("QN_SHARED=1: quantile normalization built on the shared genes only")
-_rng = np.random.default_rng(0)
-def _qsample(Xmat, nrow=800):
-    r = _rng.choice(Xmat.shape[0], size=min(nrow, Xmat.shape[0]), replace=False)
-    cols = _QCOLS.get(id(Xmat))
-    v = (Xmat[np.ix_(r, cols)] if cols is not None else Xmat[r, :]).ravel()
-    return v[np.isfinite(v)]
-_Pg = np.linspace(0, 1, 20001)
-_qK = np.quantile(_qsample(Xk), _Pg); _qH = np.quantile(_qsample(Xo), _Pg)
-_refg = 0.5 * (_qK + _qH)
-def qnormK(vec):
-    out = np.asarray(vec, float).copy(); m = np.isfinite(out); out[m] = np.interp(out[m], _qK, _refg); return out
-def qnormH(vec):
-    out = np.asarray(vec, float).copy(); m = np.isfinite(out); out[m] = np.interp(out[m], _qH, _refg); return out
+    print("Loading Orion HEK293T Perturb-seq ...", flush=True)
+    O = np.load(ORION_NPZ, allow_pickle=True)
+    Xo = O["X"]
+    o_ensg = [str(x) for x in O["ensembl_id"]]
+    o_sym  = {str(en): str(sy) for en, sy in zip(O["ensembl_id"], O["gene_name"])}
+    o_col  = {g: i for i, g in enumerate(o_ensg)}
+    o_pert = [norm(x) for x in O["perturbations"]]
+    o_row  = {p: i for i, p in enumerate(o_pert)}
+    o_effkd_mask = {norm(p): bool(e) for p, e in zip(O["perturbations"], O["effective_kd"])}
+    def o_delta_raw(tf):
+        return Xo[o_row[tf], :]
+    _ocache = {}
+    def o_delta(tf):
+        if tf not in _ocache: _ocache[tf] = qnormH(o_delta_raw(tf))
+        return _ocache[tf]
+    o_perturbed = set(o_pert)
 
-def _line_thr(Xmat, qfun):
-    return float(np.percentile(np.abs(qfun(_qsample(Xmat))), STRONG_PCTL))
-THR = {"K": _line_thr(Xk, qnormK), "H": _line_thr(Xo, qnormH)}
-print(f"responsive-target threshold (P{STRONG_PCTL}): K562 >= {THR['K']:.3f}  HEK >= {THR['H']:.3f}")
+    shared = set(k_col) & set(o_col)
+    print(f"  {len(shared)} genes measured in both K562 and HEK293T")
+
+    _shl = sorted(shared)
+    _QCOLS = {id(Xk): np.array([k_col[g] for g in _shl]),
+              id(Xo): np.array([o_col[g] for g in _shl])} if QN_SHARED else {}
+    if QN_SHARED: print("QN_SHARED=1: quantile normalization built on the shared genes only")
+    _rng = np.random.default_rng(0)
+    def _qsample(Xmat, nrow=800):
+        r = _rng.choice(Xmat.shape[0], size=min(nrow, Xmat.shape[0]), replace=False)
+        cols = _QCOLS.get(id(Xmat))
+        v = (Xmat[np.ix_(r, cols)] if cols is not None else Xmat[r, :]).ravel()
+        return v[np.isfinite(v)]
+    _Pg = np.linspace(0, 1, 20001)
+    _qK = np.quantile(_qsample(Xk), _Pg); _qH = np.quantile(_qsample(Xo), _Pg)
+    _refg = 0.5 * (_qK + _qH)
+    def qnormK(vec):
+        out = np.asarray(vec, float).copy(); m = np.isfinite(out); out[m] = np.interp(out[m], _qK, _refg); return out
+    def qnormH(vec):
+        out = np.asarray(vec, float).copy(); m = np.isfinite(out); out[m] = np.interp(out[m], _qH, _refg); return out
+
+    def _line_thr(Xmat, qfun):
+        return float(np.percentile(np.abs(qfun(_qsample(Xmat))), STRONG_PCTL))
+    THR = {"K": _line_thr(Xk, qnormK), "H": _line_thr(Xo, qnormH)}
+    print(f"responsive-target threshold (P{STRONG_PCTL}): K562 >= {THR['K']:.3f}  HEK >= {THR['H']:.3f}")
 
 # ------------------------------------------------------------------ switch set
 print("Reading feasibility / switch set ...", flush=True)

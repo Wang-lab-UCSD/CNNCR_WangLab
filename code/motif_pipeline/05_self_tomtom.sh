@@ -15,8 +15,8 @@
 # Submit: sbatch 05_self_tomtom.sh
 # Then:   python 06_universal_regulators.py
 
-source /stg3/data1/sam/anaconda3/etc/profile.d/conda.sh
-conda activate enhancer
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate cnncr
 
 # Run from the motif_pipeline directory regardless of where sbatch is called from
 cd /stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/

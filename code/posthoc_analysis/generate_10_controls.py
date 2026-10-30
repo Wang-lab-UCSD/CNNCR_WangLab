@@ -140,8 +140,8 @@ for i in range(N_SETS):
 #SBATCH --output="{job_dir}/{bssid}.out"
 #SBATCH --error="{job_dir}/{bssid}.err"
 
-source /stg3/data1/sam/anaconda3/etc/profile.d/conda.sh
-conda activate enhancer
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate cnncr
 
 fimo --no-qvalue --text \\
     {meme_path} \\

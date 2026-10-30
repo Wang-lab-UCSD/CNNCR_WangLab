@@ -10,8 +10,8 @@
 # Submit: sbatch 01_jaspar_tomtom.sh
 # Then:   python 01_jaspar_analysis.py
 
-source /stg3/data1/sam/anaconda3/etc/profile.d/conda.sh
-conda activate enhancer
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate cnncr
 cd /stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/
 
 STEP06_MEME="/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"

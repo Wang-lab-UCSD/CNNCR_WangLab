@@ -17,6 +17,12 @@ import matplotlib as mpl
 from scipy.stats import wilcoxon, ttest_1samp
 import os
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 mpl.style.use("default")
@@ -24,12 +30,12 @@ mpl.rcParams["pdf.fonttype"] = 42
 mpl.rcParams["ps.fonttype"] = 42
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
-ENFORMER_DIR       = "/stg3/data1/sam/enhancer_prediction/enformer_comparison/eqtl-enformer"
-MAPPING_CSV        = "/stg3/data1/sam/enhancer_prediction/geuvadis/predixscan/en_models_to_BSSID.csv"
-COORD_DIR          = "/stg3/data1/sam/enhancer_prediction/data_generated"
-FIMO_UNIVERSAL_DIR = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/results/fimo_universal"
+ENFORMER_DIR       = ENHANCER_ROOT + "/enformer_comparison/eqtl-enformer"
+MAPPING_CSV        = ENHANCER_ROOT + "/geuvadis/predixscan/en_models_to_BSSID.csv"
+COORD_DIR          = ENHANCER_ROOT + "/data_generated"
+FIMO_UNIVERSAL_DIR = ENHANCER_ROOT + "/multi_agent/posthoc_analysis/results/fimo_universal"
 # 10 control set FIMO directories (set_0 through set_9)
-FIMO_MULTI_BASE    = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/results/fimo_multi"
+FIMO_MULTI_BASE    = ENHANCER_ROOT + "/multi_agent/posthoc_analysis/results/fimo_multi"
 N_CONTROL_SETS     = 10
 RESULTS_DIR        = "results"
 os.makedirs(RESULTS_DIR, exist_ok=True)

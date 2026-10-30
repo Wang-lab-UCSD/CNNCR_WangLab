@@ -36,6 +36,12 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 import matplotlib
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -55,7 +61,7 @@ if not REPLOT:
     src = open(os.path.join(HERE, "08c_alltargets_stats.py")).read()
     exec(compile(src.split("DEFS = [")[0], "08c_prefix", "exec"), globals())
 else:
-    ROOT = "/stg3/data1/sam/enhancer_prediction"
+    ROOT = ENHANCER_ROOT
     CHIP = os.path.join(ROOT, "multi_agent/chipseq_enrichment")
 
 OUT = os.path.join(CHIP, "results/prof_plan")

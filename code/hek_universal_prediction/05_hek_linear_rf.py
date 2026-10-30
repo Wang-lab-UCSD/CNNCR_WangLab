@@ -22,11 +22,17 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split, KFold
 
-WORK  = "/stg3/data1/sam/enhancer_prediction/multi_agent/hek_universal_prediction"
-GENES = "/stg3/data1/sam/enhancer_prediction/gene_ENSG.txt"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+WORK  = ENHANCER_ROOT + "/multi_agent/hek_universal_prediction"
+GENES = ENHANCER_ROOT + "/gene_ENSG.txt"
 CM    = f"{WORK}/results/HEK293_count_matrix.npy"
 YLOG  = f"{WORK}/results/hek_y.npy"                # log2(HPA TPM+1), NaN if missing
-REF   = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/results/linear_rf/correlations.csv"
+REF   = ENHANCER_ROOT + "/multi_agent/posthoc_analysis/results/linear_rf/correlations.csv"
 SEED  = 42
 np.random.seed(SEED)
 

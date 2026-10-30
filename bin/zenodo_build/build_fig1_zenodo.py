@@ -9,8 +9,14 @@
 Staging: github/_build/zenodo_staging/{fig1_training_inputs,fig1_motif_sets}/
 """
 import os, sys, glob, gzip, shutil, subprocess, numpy as np, pandas as pd
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); from cnncr_io import *
-E = "/stg3/data1/sam/enhancer_prediction"; G = f"{E}/github"; STG = f"{G}/_build/zenodo_staging"; OUT = f"{G}/zenodo_upload"
+E = ENHANCER_ROOT; G = f"{E}/github"; STG = f"{G}/_build/zenodo_staging"; OUT = f"{G}/zenodo_upload"
 B = [b.strip() for b in open(f"{E}/Epimap_BSSID_nondup.txt") if b.strip()]
 names = dict(l.rstrip("\n").split("\t")[:2] for l in open(f"{E}/EpiMapID_Name.txt") if l.strip())
 

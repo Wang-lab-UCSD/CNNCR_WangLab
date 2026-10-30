@@ -30,7 +30,14 @@ import numpy as np
 # precomputed quantile-normalised vectors instead and never needs it.
 from scipy.stats import wilcoxon
 
-ROOT   = "/stg3/data1/sam/enhancer_prediction"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+SEQ_ROOT = os.environ.get("SEQ_ROOT") or ENHANCER_ROOT + "/sequences"   # the one-hot training sequences
+
+ROOT   = ENHANCER_ROOT
 CHIP   = os.path.join(ROOT, "multi_agent/chipseq_enrichment")
 OUTDIR = os.path.join(CHIP, "results/reader_switching")
 QN_SHARED = True                                     # canonical: shared-gene quantile normalization
@@ -38,7 +45,7 @@ WDIR   = os.path.join(CHIP, "results/reader_switching_qnshared_alltargets")
 os.makedirs(WDIR, exist_ok=True)
 
 K562_H5AD = os.path.join(ROOT, "perturb_seq/K562_gwps_normalized_bulk_01.h5ad")
-ORION_NPZ = "/new-stg/home/sam2/HEK293T_orion_perturbseq/processed/orion_hek293t_replogle_matched.npz"
+ORION_NPZ = SEQ_ROOT + "/HEK293T_orion_perturbseq/processed/orion_hek293t_replogle_matched.npz"
 TSS_BED   = os.path.join(ROOT, "IGV_tracks/CAGE_TSS_hg38.bed")
 FEAS      = os.path.join(OUTDIR, "hek_k562_switch_feasibility.csv")
 
@@ -67,7 +74,7 @@ chrom_gene = {ch: [g for _, g in v] for ch, v in chrom.items()}
 print(f"  {len(tss)} TSS genes")
 
 # ------------------------------------------------------------------ per-line binding
-ENCODE4 = "/new-stg/home/hanbei/data/TF_ENCODE4"
+ENCODE4 = ENHANCER_ROOT + "/encode4_tf_chipseq"
 HALF_WIN = 150
 SIG_PCTL = 90
 def build_intensity(cell, peaksets):

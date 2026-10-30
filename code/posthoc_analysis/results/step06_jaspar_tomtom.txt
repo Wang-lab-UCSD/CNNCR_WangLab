@@ -326,4 +326,4 @@ universal_42	NFYB_1	2	5.48008e-06	0.00460874	0.00921749	8	GGCCAATG	CTGGCCAATGAG	
 
 # Tomtom (Motif Comparison Tool): Version 5.5.1 compiled on Mar  6 2023 at 14:41:02
 # The format of this file is described at https://meme-suite.org/meme/doc/tomtom-output-format.html.
-# tomtom -no-ssc -verbosity 2 -text -dist pearson -min-overlap 7 -evalue -thresh 1 /stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme /stg3/data1/sam/enhancer_prediction/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme
+# tomtom -no-ssc -verbosity 2 -text -dist pearson -min-overlap 7 -evalue -thresh 1 $ENHANCER_ROOT/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme $ENHANCER_ROOT/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme

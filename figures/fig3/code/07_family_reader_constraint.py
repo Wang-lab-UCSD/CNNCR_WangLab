@@ -27,14 +27,21 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-MA = "/stg3/data1/sam/enhancer_prediction/multi_agent"
-SD = "/stg3/data1/sam/enhancer_prediction/paper_figures/fig3/code"
+import os
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+MA = ENHANCER_ROOT + "/multi_agent"
+SD = ENHANCER_ROOT + "/paper_figures/fig3/code"
 MIN_READERS = 5
 
 with open(f"{MA}/posthoc_analysis/results/step06_JASPAR_assignments.json") as fh:
     assign = json.load(fh)
 
-tfi = pd.read_csv("/stg3/data1/sam/enhancer_prediction/motif_analysis/TF_Information.txt", sep="\t")
+tfi = pd.read_csv(ENHANCER_ROOT + "/motif_analysis/TF_Information.txt", sep="\t")
 tfi = tfi[tfi.TF_Species == "Homo_sapiens"].copy()
 tfi["U"] = tfi.TF_Name.str.upper()
 fam = tfi.drop_duplicates("U").set_index("U")["Family_Name"].to_dict()

@@ -4,9 +4,10 @@
     python bin/setup_work_dir.py --enhancer-root /abs/path/work
 
 Creates $ENHANCER_ROOT, links the repository's `code/` as $ENHANCER_ROOT/multi_agent and the small inputs shipped in `data/` and `figures/`
-at the paths the archived scripts expect (see PATHS.md), then runs bin/rewrite_paths.py. Rerun after moving the repository or the work directory.
+at the paths the scripts expect (see PATHS.md), and writes env.sh and .roots.json, which tell the scripts and the notebooks where that
+directory is. Rerun after moving the repository or the work directory.
 Zenodo archives are unpacked into $ENHANCER_ROOT afterwards (tar --keep-directory-symlink -xzf <archive> -C $ENHANCER_ROOT); ENCODE peaks: bin/download_encode_peaks.py."""
-import os, argparse, subprocess, sys, shutil
+import os, argparse, json, sys, shutil
 here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ap = argparse.ArgumentParser(); ap.add_argument("--enhancer-root", required=True)
 ap.add_argument("--repair-multi-agent", action="store_true",
@@ -57,5 +58,16 @@ ln(f"{here}/data/motifs/CISBP_TF_Information.txt", f"{W}/motif_analysis/TF_Infor
 ln(f"{here}/data/motifs/CISBP_human_motifs.meme", f"{W}/motif_analysis/CISBP_motifs.meme")
 for d in ("fig1", "fig3", "fig4", "fonts"): ln(f"{here}/figures/{d}", f"{W}/paper_figures/{d}")
 os.makedirs(f"{W}/paper_figures/fig5", exist_ok=True)      # the Fig. 5 sheet is copied here by 09k4_fig5_defg.py
-subprocess.run([sys.executable, f"{here}/bin/rewrite_paths.py", "--enhancer-root", W, "--seq-root", f"{W}/sequences"], check=True)
-print(f"work directory ready: {W}\nnext: unpack the Zenodo archives you need into {W} (external_data/ZENODO_MANIFEST.md) and, for notebooks 08/10/11, run bin/download_encode_peaks.py --dest {W}/encode4_tf_chipseq")
+# The scripts read their data root from the environment; the notebooks read it from .roots.json.
+json.dump({"enhancer_root": W, "seq_root": f"{W}/sequences"}, open(f"{here}/.roots.json", "w"), indent=1)
+open(f"{here}/env.sh", "w").write(f"""# Written by bin/setup_work_dir.py. Source this before running anything in code/ or figures/
+# outside the notebooks (the notebooks set both variables themselves from .roots.json).
+export ENHANCER_ROOT="{W}"
+export SEQ_ROOT="{W}/sequences"
+""")
+print(f"""work directory ready: {W}
+wrote env.sh and .roots.json; for the scripts in code/ and figures/ run
+
+    source {here}/env.sh
+
+next: unpack the Zenodo archives you need into {W} (external_data/ZENODO_MANIFEST.md) and, for notebooks 08/10/11, run bin/download_encode_peaks.py --dest {W}/encode4_tf_chipseq""")

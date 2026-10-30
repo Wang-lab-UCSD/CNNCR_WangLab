@@ -18,11 +18,17 @@ Windows come from regions/hek293_windows.fa (headers HEK293_{gene_idx}_{bin}).
 """
 import os, numpy as np, pandas as pd
 
-WORK  = "/stg3/data1/sam/enhancer_prediction/multi_agent/hek_universal_prediction"
-GENES = "/stg3/data1/sam/enhancer_prediction/gene_ENSG.txt"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+WORK  = ENHANCER_ROOT + "/multi_agent/hek_universal_prediction"
+GENES = ENHANCER_ROOT + "/gene_ENSG.txt"
 FA    = f"{WORK}/regions/hek293_windows.fa"
 HPA   = f"{WORK}/../hek_hpa/HEK293_HPA_expression.tsv"
-CAGE  = "/stg3/data1/sam/genome_annotation/hg38_promoters_cage_corrected.bed"
+CAGE  = ENHANCER_ROOT + "/genome_annotation/hg38_promoters_cage_corrected.bed"
 N_GENES, N_BRANCH, SEQ_LEN = 18356, 10, 400
 os.makedirs(f"{WORK}/results", exist_ok=True)
 

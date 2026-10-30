@@ -1,8 +1,14 @@
 """Write the quantile-normalised knockout-effect vectors of both Perturb-seq screens, exactly as 08c_alltargets_stats.py computes them
 in memory (shared 8,236-gene axis, seed-0 quantile reference), so notebook 11 never loads or normalises the raw screens.
-Runs the loader prefix of the development copy of 08c (paths as on the development machine)."""
+Runs the loader prefix of 08c to export the two quantile-normalised matrices."""
 import os, sys, numpy as np, time
-CE="/stg3/data1/sam/enhancer_prediction/multi_agent/chipseq_enrichment"; OUT=sys.argv[1]; os.makedirs(OUT,exist_ok=True); os.chdir(CE)
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+CE=ENHANCER_ROOT + "/multi_agent/chipseq_enrichment"; OUT=sys.argv[1]; os.makedirs(OUT,exist_ok=True); os.chdir(CE)
 _t0=time.time(); src=open("08c_alltargets_stats.py").read().split("DEFS = [")[0]
 exec(compile(src,"08c_prefix","exec")); print("prefix loaded %.0f s"%(time.time()-_t0),flush=True)
 genes=np.array(_shl); kidx=np.array([k_col[g] for g in _shl]); oidx=np.array([o_col[g] for g in _shl])

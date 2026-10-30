@@ -5,16 +5,22 @@ Single source of truth for every path, cell line, and threshold. Import as:
 """
 import os, re
 
-ROOT     = "/stg3/data1/sam/enhancer_prediction"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+ROOT     = ENHANCER_ROOT
 CHIP     = f"{ROOT}/multi_agent/chipseq_enrichment"
 HERE     = f"{CHIP}/reader_switch"
 OUT      = f"{HERE}/out"
 
 # --- primary inputs (nothing here is produced by this pipeline) ---
-ENCODE4  = "/new-stg/home/hanbei/data/TF_ENCODE4"                       # raw narrowPeak per TF
-PROMOTER = "/stg3/data1/sam/genome_annotation/hg38_promoters_cage_corrected.bed"
-HG38     = "/stg3/data1/sam/utility/hg38.fa"
-BEDTOOLS = "/stg3/data1/sam/Programs/bedtools2/bin/bedtools"
+ENCODE4  = ENHANCER_ROOT + "/encode4_tf_chipseq"                       # raw narrowPeak per TF
+PROMOTER = ENHANCER_ROOT + "/genome_annotation/hg38_promoters_cage_corrected.bed"
+HG38     = ENHANCER_ROOT + "/genomes/hg38.fa"
+BEDTOOLS = "bedtools"
 GENES_TXT = f"{ROOT}/gene_ENSG.txt"
 JASPAR   = f"{ROOT}/multi_agent/posthoc_analysis/results/step06_JASPAR_assignments.json"
 UNIV_IDS = f"{CHIP}/data/universal_motif_ids.txt"                       # 43 core motif ids

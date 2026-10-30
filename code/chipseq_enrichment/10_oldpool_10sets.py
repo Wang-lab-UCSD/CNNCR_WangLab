@@ -17,12 +17,18 @@ Writes results/oldpool10/
 import os, glob
 import numpy as np, pandas as pd
 from scipy import stats
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-PH = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis"
+PH = ENHANCER_ROOT + "/multi_agent/posthoc_analysis"
 CELLS = ["HepG2", "K562", "GM12878", "MCF.7", "A549"]
 OUT = "results/oldpool10"; os.makedirs(OUT, exist_ok=True)
 members = lambda p: [l.split()[1] for l in open(p) if l.startswith("MOTIF")]
-core_ids = members("/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme")
+core_ids = members(ENHANCER_ROOT + "/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme")
 SETS = {int(f.rsplit("_", 1)[1].split(".")[0]): members(f) for f in sorted(glob.glob(f"{PH}/results/control_motifs_set_*.meme"))}
 assert len(SETS) == 10
 files = [f"results/pool_enrichment/{c}_enrichment.csv" for c in CELLS] + [f"results/pool_enrichment_extra/{c}_enrichment.csv" for c in CELLS]

@@ -7,6 +7,12 @@ switch rate is computed pair by pair on the loci interrogated in BOTH lines of t
 Metric definitions and layout are otherwise identical to fig5bc_popularity.py.
 """
 import sys, os, json, itertools
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np, pandas as pd
 import matplotlib; matplotlib.use("Agg")
@@ -158,7 +164,7 @@ for _x, _t in ((gs[0, 0].get_position(fig).x0, "Reader binding"),
                (gs[0, 2].get_position(fig).x0, "Reader switch")):
     fig.text(_x, _ty, _t, ha="left", va="top", fontsize=FS_TITLE, color=INK, fontweight="bold")
 import shutil
-DEST = "/stg3/data1/sam/enhancer_prediction/paper_figures/fig5"
+DEST = ENHANCER_ROOT + "/paper_figures/fig5"
 for ext in ("pdf", "png", "svg"):
     fig.savefig(f"{OUT}/fig5bc_popularity_open.{ext}", dpi=600, bbox_inches="tight",
                 transparent=True)

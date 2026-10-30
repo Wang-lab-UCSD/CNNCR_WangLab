@@ -14,7 +14,13 @@ are irrelevant to a perturbation comparison and would only cost runtime.
   out/reader_binding_top90.parquet   cell, gene_idx, ensembl, motif_id, reader, max_signal, n_copies
 """
 import sys, os, json, subprocess, tempfile
-RS = "/stg3/data1/sam/enhancer_prediction/multi_agent/chipseq_enrichment/reader_switch"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+RS = ENHANCER_ROOT + "/multi_agent/chipseq_enrichment/reader_switch"
 sys.path.insert(0, RS)
 import numpy as np, pandas as pd
 from lib.config import JASPAR, BEDTOOLS, OUT, norm

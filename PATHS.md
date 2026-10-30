@@ -1,10 +1,10 @@
 # Where every input lives
 
-The analysis scripts are archived as run. On the development machine every analysis lived in its own folder under
-`$ENHANCER_ROOT/multi_agent/`, wrote to `results/` inside that folder and read the other analyses' outputs through that layout. The
+The analysis scripts are archived as run. Each analysis lives in its own folder under `$ENHANCER_ROOT/multi_agent/`, writes to
+`results/` inside that folder and reads the other analyses' outputs through that layout. The
 repository keeps the folder names, so `$ENHANCER_ROOT/multi_agent` must be this repository's `code/` (a symlink). `bin/setup_work_dir.py
---enhancer-root DIR` creates the work directory, the symlink and every link in the first table, and rewrites the development roots in
-the scripts (`bin/rewrite_paths.py`; a `.orig` copy of each rewritten script is kept, so it can be rerun).
+--enhancer-root DIR` creates the work directory, the symlink and every link in the first table, and writes `env.sh` (which exports
+`ENHANCER_ROOT` and `SEQ_ROOT` for the scripts) and `.roots.json` (which the notebooks read). It can be rerun at any time.
 
 ## Shipped in the repository, linked into `$ENHANCER_ROOT` by `setup_work_dir.py`
 | path under `$ENHANCER_ROOT` | from |
@@ -33,7 +33,10 @@ the scripts (`bin/rewrite_paths.py`; a `.orig` copy of each rewritten script is 
 | path under `$ENHANCER_ROOT` | how |
 |---|---|
 | `encode4_tf_chipseq/{cell line}/{TF}_human/{ENCFF}.bed` | `bin/download_encode_peaks.py --dest $ENHANCER_ROOT/encode4_tf_chipseq` (notebooks 08, 10, 11) |
+| `genomes/hg38.fa` | the UCSC hg38 FASTA, only to re-run `code/chipseq_enrichment/reader_switch/s2_motif_loci.py`; the loci it writes ship in `fig5_reader_switch_inputs` |
 
-`$SEQ_ROOT` (set to `$ENHANCER_ROOT/sequences` by `setup_work_dir.py`) is referenced only by the provenance script
-`code/perturb_seq/orion_hek293t_process_replogle.py`, which rebuilds the HEK293T Perturb-seq matrix from the raw X-Atlas/Orion download; no notebook needs it.
+`$SEQ_ROOT` (set to `$ENHANCER_ROOT/sequences` by `setup_work_dir.py`) holds two inputs no notebook reads: the per-biosample
+promoter-window FASTAs that `code/posthoc_analysis/generate_10_controls.py` writes its FIMO job scripts against (the scripts are
+written, not run, by notebook 04), and the raw X-Atlas/Orion download that `code/perturb_seq/orion_hek293t_process_replogle.py`
+rebuilds the HEK293T Perturb-seq matrix from (notebook 11 reads the released matrix from Zenodo instead).
 The external tools (`tomtom`, `bedtools`) are taken from `$PATH` (the `cnncr` environment).

@@ -45,7 +45,7 @@ for cell in CELLS:
     interro.append(L[["gene_idx", "motif_id"]].drop_duplicates().assign(cell=cell))
 
     pb, asy = top_peaks_bed(cell); assayed_all[cell] = sorted(asy)
-    res = subprocess.run(f"{BED if (BED:=os.environ.get('BEDTOOLS')) else '/stg3/data1/sam/Programs/bedtools2/bin/bedtools'}"
+    res = subprocess.run(f"{BED if (BED:=os.environ.get('BEDTOOLS')) else 'bedtools'}"
                          f" intersect -a {lb.name} -b {pb} -wa -wb -sorted",
                          shell=True, capture_output=True, text=True)
     os.unlink(pb); os.unlink(lb.name)

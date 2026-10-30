@@ -23,6 +23,12 @@ from torch.nn.parameter import Parameter
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 ap = argparse.ArgumentParser()
 ap.add_argument("--motif_set", choices=["universal", "control"], default="universal")
@@ -33,12 +39,12 @@ ap.add_argument("--dropout", type=float, default=0.15)
 ap.add_argument("--lr", type=float, default=1e-4); ap.add_argument("--patience", type=int, default=10); ap.add_argument("--epochs", type=int, default=100)   # published HEK293 model: --dropout 0.3 --reg_scale 2.0 --lr 5e-5 --patience 15 --epochs 200
 args = ap.parse_args()
 
-UNIVERSAL_MEME = "/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
-CONTROL_MEME   = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/results/control_motifs.meme"
+UNIVERSAL_MEME = ENHANCER_ROOT + "/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
+CONTROL_MEME   = ENHANCER_ROOT + "/multi_agent/posthoc_analysis/results/control_motifs.meme"
 ONEHOT = "results/hek_one_hot.npy"     # (18356, 10, 400, 4) bool
 YFILE  = "results/hek_y.npy"           # (18356,) log2(HPA TPM+1), NaN if missing
 OUT_DIR = "results/cnn"
-REF = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/results/cnn"  # optional
+REF = ENHANCER_ROOT + "/multi_agent/posthoc_analysis/results/cnn"  # optional
 
 SEED = 42
 np.random.seed(SEED); torch.manual_seed(SEED)

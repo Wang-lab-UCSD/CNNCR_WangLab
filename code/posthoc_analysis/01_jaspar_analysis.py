@@ -27,12 +27,18 @@ import tempfile
 import numpy as np
 import pandas as pd
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 random.seed(42)
 np.random.seed(42)
 
-STEP06_MEME  = "/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
-JASPAR_MEME  = "/stg3/data1/sam/enhancer_prediction/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
+STEP06_MEME  = ENHANCER_ROOT + "/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
+JASPAR_MEME  = ENHANCER_ROOT + "/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
 TOMTOM_FILE  = "results/step06_jaspar_tomtom.txt"
 ASSIGN_JSON      = "results/step06_JASPAR_assignments.json"
 CONTROL_MEME     = "results/control_motifs.meme"

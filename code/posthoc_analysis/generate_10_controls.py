@@ -25,12 +25,19 @@ import re
 import random
 import numpy as np
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+SEQ_ROOT = os.environ.get("SEQ_ROOT") or ENHANCER_ROOT + "/sequences"   # the one-hot training sequences
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-JASPAR_MEME    = "/stg3/data1/sam/enhancer_prediction/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
+JASPAR_MEME    = ENHANCER_ROOT + "/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
 CANDIDATE_FILE = "results/control_candidate_pool.txt"
-FASTA_DIR      = "/new-stg/home/sam2/training_sequences_unique_fasta_noN_pro"
-BASE_DIR       = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis"
+FASTA_DIR      = SEQ_ROOT + "/training_sequences_unique_fasta_noN_pro"
+BASE_DIR       = ENHANCER_ROOT + "/multi_agent/posthoc_analysis"
 N_SETS         = 10
 N_MOTIFS       = 43   # must match universal regulator count
 

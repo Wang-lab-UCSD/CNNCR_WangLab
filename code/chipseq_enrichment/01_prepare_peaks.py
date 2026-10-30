@@ -17,9 +17,15 @@ import sys
 import pickle
 import bisect
 
-ENCODE4_DIR  = "/new-stg/home/hanbei/data/TF_ENCODE4"
-WORK_DIR     = "/stg3/data1/sam/enhancer_prediction/multi_agent/chipseq_enrichment"
-PROMOTER_BED = "/stg3/data1/sam/genome_annotation/hg38_promoters_cage_corrected.bed"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+ENCODE4_DIR  = ENHANCER_ROOT + "/encode4_tf_chipseq"
+WORK_DIR     = ENHANCER_ROOT + "/multi_agent/chipseq_enrichment"
+PROMOTER_BED = ENHANCER_ROOT + "/genome_annotation/hg38_promoters_cage_corrected.bed"
 
 # Default = original 5 lines; pass cell line(s) as CLI args to run a subset,
 # e.g.  python 01_prepare_peaks.py HEK293   (identical protocol, new line).

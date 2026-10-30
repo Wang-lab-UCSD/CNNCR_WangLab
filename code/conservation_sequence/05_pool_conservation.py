@@ -22,6 +22,12 @@ import numpy as np
 import pandas as pd
 import pyBigWig
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 ap = argparse.ArgumentParser()
@@ -32,10 +38,10 @@ ap.add_argument("--outdir", default="results/pool_conservation")
 args = ap.parse_args()
 BSSID = args.bssid
 
-PSCAN = args.scan or ("/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/"
+PSCAN = args.scan or (ENHANCER_ROOT + "/multi_agent/posthoc_analysis/"
          f"results/pool_scan/{BSSID}_fimo.txt.gz")
-COORD = f"/stg3/data1/sam/enhancer_prediction/data_generated/{BSSID}.coord.exp.df.final.csv"
-CORE_MEME = "/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
+COORD = ENHANCER_ROOT + f"/data_generated/{BSSID}.coord.exp.df.final.csv"
+CORE_MEME = ENHANCER_ROOT + "/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
 OUT_DIR = args.outdir
 OUT = f"{OUT_DIR}/{BSSID}_motif_summary.tsv"
 os.makedirs(OUT_DIR, exist_ok=True)

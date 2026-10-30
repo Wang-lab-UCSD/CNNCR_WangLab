@@ -10,12 +10,14 @@
 # Submit: sbatch 01_jaspar_tomtom.sh
 # Then:   python 01_jaspar_analysis.py
 
+: "${ENHANCER_ROOT:?set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)}"
+
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate cnncr
-cd /stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/
+cd "$ENHANCER_ROOT/multi_agent/posthoc_analysis/"
 
-STEP06_MEME="/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
-JASPAR_MEME="/stg3/data1/sam/enhancer_prediction/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
+STEP06_MEME="$ENHANCER_ROOT/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme"
+JASPAR_MEME="$ENHANCER_ROOT/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
 
 tomtom -no-ssc -verbosity 2 -text -dist pearson -min-overlap 7 -evalue -thresh 1 \
     "$STEP06_MEME" "$JASPAR_MEME" \

@@ -55,6 +55,12 @@ from matplotlib.patches import PathPatch
 # system Arial. Many system "Arial" builds lack the Unicode superscript glyphs (U+207B, U+2070), which
 # is why exponents are drawn with mathtext below rather than with superscript characters.
 from matplotlib import font_manager as _fm
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 _FONTS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "fonts")
 for _f in _glob.glob(os.path.join(_FONTS, "LiberationSans-*.ttf")): _fm.fontManager.addfont(_f)
 plt.rcParams.update({"font.family": "sans-serif",
@@ -63,7 +69,7 @@ plt.rcParams.update({"font.family": "sans-serif",
                      "pdf.fonttype": 42, "ps.fonttype": 42, "svg.fonttype": "none"})
 
 SD   = os.path.dirname(os.path.abspath(__file__))
-MA   = "/stg3/data1/sam/enhancer_prediction/multi_agent"
+MA   = ENHANCER_ROOT + "/multi_agent"
 CGIC = f"{MA}/posthoc_analysis/results/cg_ic_per_motif.csv"
 CONS = f"{MA}/conservation_sequence/results/conservation_aggregate.csv"
 DBD  = f"{MA}/conservation_protein/results/dbd_oe_scores.csv"

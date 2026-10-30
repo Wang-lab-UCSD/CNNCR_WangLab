@@ -7,7 +7,13 @@
                                         per-biosample phyloP summaries of all 116 biosamples, UniProt + gnomAD RMC tables for panels f-h
 Archives unpack under $ENHANCER_ROOT (multi_agent/ = the repository's code/)."""
 import os, sys, glob, shutil, subprocess
-E="/stg3/data1/sam/enhancer_prediction"; MA=f"{E}/multi_agent"; G=f"{E}/github"; STG=f"{G}/_build/zenodo_staging"; OUT=f"{G}/zenodo_upload"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+E=ENHANCER_ROOT; MA=f"{E}/multi_agent"; G=f"{E}/github"; STG=f"{G}/_build/zenodo_staging"; OUT=f"{G}/zenodo_upload"
 B=[b.strip() for b in open(f"{E}/Epimap_BSSID_nondup.txt") if b.strip()]
 Z="pigz -p 8" if shutil.which("pigz") else "gzip"
 def tar(name,cwd,items):

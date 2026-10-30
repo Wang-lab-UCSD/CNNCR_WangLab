@@ -21,14 +21,20 @@ import os
 import sys
 import numpy as np
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
 
 from utils import load_bssids, parse_meme_file, write_meme_file, information_content
 
 # ── configuration ─────────────────────────────────────────────────────────────
-CNN_DIR         = "/stg3/data1/sam/enhancer_prediction/cell_type_specific_CNN"
-BSSID_FILE      = "/stg3/data1/sam/enhancer_prediction/Epimap_BSSID_nondup.txt"
+CNN_DIR         = ENHANCER_ROOT + "/cell_type_specific_CNN"
+BSSID_FILE      = ENHANCER_ROOT + "/Epimap_BSSID_nondup.txt"
 OUTPUT_DIR      = os.path.join(SCRIPT_DIR, "results", "cell_motifs")
 MODEL_REMARK    = "256MOTIF_pytorch"
 ANALYSIS_TYPE   = "pro"

@@ -21,6 +21,12 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 import matplotlib
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -29,10 +35,10 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # ── paths ──────────────────────────────────────────────────────────────────
 JASPAR_ASSIGNMENTS = (
-    "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/"
+    ENHANCER_ROOT + "/multi_agent/posthoc_analysis/"
     "results/step06_JASPAR_assignments.json"
 )
-TF_INFO = "/stg3/data1/sam/enhancer_prediction/motif_analysis/TF_Information.txt"
+TF_INFO = ENHANCER_ROOT + "/motif_analysis/TF_Information.txt"
 GNOMAD_CACHE = "results/gnomad_v2.1.1_constraint.tsv"
 GNOMAD_URL = (
     "https://storage.googleapis.com/gcp-public-data--gnomad/release/2.1.1/"
@@ -220,7 +226,7 @@ print("Saved → results/universal_tf_constraint_table.csv")
 
 # ── 9. per-motif pLI coverage: universal vs control ────────────────────────
 CONTROL_MEME = (
-    "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis/"
+    ENHANCER_ROOT + "/multi_agent/posthoc_analysis/"
     "results/control_motifs.meme"
 )
 

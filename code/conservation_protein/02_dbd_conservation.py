@@ -20,6 +20,12 @@ import json
 import numpy as np
 import pandas as pd
 import matplotlib
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -29,7 +35,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # ── paths ──────────────────────────────────────────────────────────────────────
 JASPAR_ASSIGNMENTS = "../posthoc_analysis/results/step06_JASPAR_assignments.json"
-TF_INFO            = "/stg3/data1/sam/enhancer_prediction/motif_analysis/TF_Information.txt"
+TF_INFO            = ENHANCER_ROOT + "/motif_analysis/TF_Information.txt"
 UNIPROT_DAT        = "uniprot_sprot_human.dat.gz"
 GNOMAD_RMC         = "gnomAD_v2.1.1_transcripts_with_rmc.tsv"
 OUT_DIR            = "results"

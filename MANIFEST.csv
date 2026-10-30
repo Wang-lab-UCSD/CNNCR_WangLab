@@ -81,7 +81,7 @@ figures/fonts/LiberationSans-BoldItalic.ttf,figures,$ENHANCER_ROOT/paper_figures
 figures/fonts/LiberationSans-Italic.ttf,figures,$ENHANCER_ROOT/paper_figures/fonts/LiberationSans-Italic.ttf,,406.1
 figures/fonts/LiberationSans-Regular.ttf,figures,$ENHANCER_ROOT/paper_figures/fonts/LiberationSans-Regular.ttf,,401.1
 data/genes/gene_ENSG.txt,data,$ENHANCER_ROOT/gene_ENSG.txt,"the 18,356 analysis genes in matrix order",286.8
-data/genes/hg38_promoters_cage_corrected.bed,data,/stg3/data1/sam/genome_annotation/hg38_promoters_cage_corrected.bed,FANTOM5 CAGE TSS per gene (hg38); interval = TSS +/- 10 kb,752.7
+data/genes/hg38_promoters_cage_corrected.bed,data,$ENHANCER_ROOT/genome_annotation/hg38_promoters_cage_corrected.bed,FANTOM5 CAGE TSS per gene (hg38); interval = TSS +/- 10 kb,752.7
 data/genes/CAGE_TSS_hg38.bed,data,$ENHANCER_ROOT/IGV_tracks/CAGE_TSS_hg38.bed,CAGE TSS bed used by the reader-switching scripts,752.7
 data/biosamples/Epimap_BSSID_nondup.txt,data,$ENHANCER_ROOT/Epimap_BSSID_nondup.txt,biosample lists,1.0
 data/biosamples/EpiMapID_Name_nonDup.txt,data,$ENHANCER_ROOT/EpiMapID_Name_nonDup.txt,biosample lists,4.3

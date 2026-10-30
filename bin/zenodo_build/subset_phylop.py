@@ -1,7 +1,13 @@
 """phyloP100way (hg38) restricted to the union of the promoter windows (TSS +/- 10 kb peak windows, slots 0-9) of the 116 biosamples.
 Writes a bigWig readable by the conservation scripts exactly like the full UCSC file (pyBigWig bw.stats over sites inside windows)."""
 import os, sys, numpy as np, pandas as pd, pyBigWig, time
-E="/stg3/data1/sam/enhancer_prediction"; SRC=f"{E}/multi_agent/conservation_sequence/hg38.phyloP100way.bw"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+E=ENHANCER_ROOT; SRC=f"{E}/multi_agent/conservation_sequence/hg38.phyloP100way.bw"
 OUT=sys.argv[1] if len(sys.argv)>1 else f"{E}/github/_build/fig3/phyloP100way_hg38_promoter_windows.bw"
 B=[b.strip() for b in open(f"{E}/Epimap_BSSID_nondup.txt") if b.strip()]
 t=time.time(); iv={}

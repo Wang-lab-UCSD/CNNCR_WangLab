@@ -33,6 +33,12 @@ import subprocess
 import numpy as np
 from collections import defaultdict
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
 
@@ -43,10 +49,10 @@ from utils import (
 
 # ── configuration ─────────────────────────────────────────────────────────────
 OUTPUT_DIR     = os.path.join(SCRIPT_DIR, "results", "cell_motifs")
-JASPAR_MEME    = "/stg3/data1/sam/enhancer_prediction/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
-GENE_NAME_FILE = "/stg3/data1/sam/enhancer_prediction/gene_ENSG_name.txt"
-TF_INFO_FILE   = "/stg3/data1/sam/enhancer_prediction/motif_analysis/TF_Information.txt"
-EXPR_DIR       = "/stg3/data1/sam/enhancer_prediction/training_y"
+JASPAR_MEME    = ENHANCER_ROOT + "/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"
+GENE_NAME_FILE = ENHANCER_ROOT + "/gene_ENSG_name.txt"
+TF_INFO_FILE   = ENHANCER_ROOT + "/motif_analysis/TF_Information.txt"
+EXPR_DIR       = ENHANCER_ROOT + "/training_y"
 
 # TOMTOM run settings (permissive threshold; Python filtering is applied separately)
 TOMTOM_MIN_OVERLAP = 7

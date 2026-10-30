@@ -35,8 +35,9 @@ tar --keep-directory-symlink -xzf <archive> -C /abs/path/work
 flag GNU tar replaces it with a real directory, so the archived files never reach `code/` and notebooks 06, 08, 10 and 11 report
 missing inputs. To repair a work directory where that already happened, rerun `bin/setup_work_dir.py` with `--repair-multi-agent`.
 
-`bin/setup_work_dir.py` rewrites the archived scripts' two absolute development roots **in place** (`bin/rewrite_paths.py`, keeping
-`.orig` copies), so run it on your own clone rather than on a checkout shared with others.
+The scripts in `code/` and `figures/` hold no absolute path: each reads its data root from `$ENHANCER_ROOT` (and the training
+sequences from `$SEQ_ROOT`). `bin/setup_work_dir.py` writes `env.sh` with both, so `source env.sh` before running one of them
+directly; the notebooks set them from `.roots.json` and need nothing exported.
 
 Tested on Linux (RHEL 8) with the environment built by micromamba 2.9; the `cnncr` environment holds Python 3.9, PyTorch 2.2 (CUDA 11.8),
 the MEME suite 5.5.9 (TOMTOM), bedtools, pyBigWig and the usual scientific stack. Notebooks 01, 05 and 09 train networks and want one
@@ -106,8 +107,8 @@ Avsec et al. 2021) and the processed Perturb-seq screens (Replogle et al. 2022; 
 ## Layout
 
 `code/<analysis>/` are the analysis folders as run for the paper; the work directory's `multi_agent/` links to `code/`, so the
-scripts' relative references between folders keep working, and `bin/rewrite_paths.py` (run by `setup_work_dir.py`) rewrites the two
-absolute roots of the development machine to your work directory. `PATHS.md` lists where every input lives. `figures/fig{1,3,4}/`
+scripts' relative references between folders keep working, and every data path is built from `$ENHANCER_ROOT`, the work directory
+you created. `PATHS.md` lists where every input lives. `figures/fig{1,3,4}/`
 hold the panel scripts, `bin/zenodo_build/` the scripts that built the archives (provenance), `MANIFEST.csv` the origin of every file.
 
 ## Citation and licence

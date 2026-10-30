@@ -10,6 +10,12 @@ from concurrent.futures import ProcessPoolExecutor
 from collections import defaultdict
 import sys
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 bssid = sys.argv[1]
 # bssid = 'BSS00762'
 
@@ -20,7 +26,7 @@ mpl.rcParams["ps.fonttype"] = 42
 # This script removes redundant motifs from set of all motifs extracted by all models based on PWM similarity
 # This script should be run after running "extract_CNN_CR_motifs.py"
 
-# tomtom -no-ssc -verbosity 2 -text -dist pearson -evalue -thresh 5 /stg3/data1/sam/enhancer_prediction/gene_specific_motifs_3/genespecific_nonredundant_motifs_antiCISBP_enh.meme /stg3/data1/sam/enhancer_prediction/motif_analysis/Epigram_human.meme > /stg3/data1/sam/enhancer_prediction/motif_analysis/enh3_antiCISBP_overlap_Epigram_motifs.txt
+# tomtom -no-ssc -verbosity 2 -text -dist pearson -evalue -thresh 5 $ENHANCER_ROOT/gene_specific_motifs_3/genespecific_nonredundant_motifs_antiCISBP_enh.meme $ENHANCER_ROOT/motif_analysis/Epigram_human.meme > $ENHANCER_ROOT/motif_analysis/enh3_antiCISBP_overlap_Epigram_motifs.txt
 
 # Folder and constants
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -388,7 +394,7 @@ def normalize_motifs(motifs):
 
     return normalized_motifs
 
-celldir = (sys.argv[3].rstrip('/') + '/') if len(sys.argv) > 3 else '/stg3/data1/sam/enhancer_prediction/cell_type_specific_CNN/' + bssid + '/'   # optional third argument: folder holding the motif files
+celldir = (sys.argv[3].rstrip('/') + '/') if len(sys.argv) > 3 else ENHANCER_ROOT + '/cell_type_specific_CNN/' + bssid + '/'   # optional third argument: folder holding the motif files
 motifs = parse_meme_to_pwms(celldir + f'{bssid}_{type}_motifs_combined.meme')
 loaded = np.load(celldir + f'{bssid}_{type}_motifs_combined_weights.npz')
 weights = [loaded[f"arr_{i}"] for i in range(len(loaded))]

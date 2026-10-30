@@ -16,7 +16,7 @@ Replogle representation (decoded from K562_gwps_normalized_bulk_01.h5ad):
 Scale of the per-cell normalization (TARGET_SUM) cancels in both X (z-score) and
 fold_expr (ratio), so it need not match Replogle's absolute scale.
 
-Input : /new-stg/home/sam2/HEK293T_orion_perturbseq/data/HEK293T_*.parquet (223 shards)
+Input : $SEQ_ROOT/HEK293T_orion_perturbseq/data/HEK293T_*.parquet (223 shards)
         cells: sparse raw UMI gene_token_id[]+gene_expression[], gene_target (KO,
         "Non-Targeting"=control), pass_guide_filter (QC).
 Output: processed/orion_hek293t_replogle_matched.npz + _summary.tsv
@@ -26,7 +26,9 @@ import pyarrow.parquet as pq
 import pyarrow.compute as pc
 from scipy.sparse import coo_matrix
 
-ROOT   = "/new-stg/home/sam2/HEK293T_orion_perturbseq"
+SEQ_ROOT = os.environ.get("SEQ_ROOT") or ENHANCER_ROOT + "/sequences"   # the one-hot training sequences
+
+ROOT   = SEQ_ROOT + "/HEK293T_orion_perturbseq"
 DATA   = sorted(glob.glob(f"{ROOT}/data/HEK293T_*.parquet"))
 GMETA  = f"{ROOT}/gene_metadata.parquet"
 OUT    = f"{ROOT}/processed"

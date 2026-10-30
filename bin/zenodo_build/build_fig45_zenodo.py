@@ -8,7 +8,13 @@
                  quantile-normalised Perturb-seq effect matrices (from export_perturbseq_qn.py) and the Fig. 5d-g result caches (notebook 11)
   pack        -> tar the three staging folders"""
 import os, sys, glob, shutil, subprocess
-E="/stg3/data1/sam/enhancer_prediction"; MA=f"{E}/multi_agent"; G=f"{E}/github"; STG=f"{G}/_build/zenodo_staging"; OUT=f"{G}/zenodo_upload"
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
+E=ENHANCER_ROOT; MA=f"{E}/multi_agent"; G=f"{E}/github"; STG=f"{G}/_build/zenodo_staging"; OUT=f"{G}/zenodo_upload"
 Z="pigz -p 8" if shutil.which("pigz") else "gzip"
 def tar(name,cwd,items): subprocess.run(f"tar -I '{Z}' -cf {OUT}/{name} -C {cwd} {' '.join(items)}",shell=True,check=True); print("wrote",name,"%.2f GB"%(os.path.getsize(f"{OUT}/{name}")/1e9))
 def cp(src,dst): os.makedirs(os.path.dirname(dst),exist_ok=True); shutil.copy2(src,dst)

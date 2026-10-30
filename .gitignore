@@ -18,3 +18,4 @@ slurm-*.out
 !data/k562_sample/*.pth
 !code/hek_universal_prediction/regions/hek293_windows.fa
 !data/k562_demo/*.fa.gz
+env.sh

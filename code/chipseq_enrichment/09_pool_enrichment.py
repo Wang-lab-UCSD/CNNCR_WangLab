@@ -27,9 +27,15 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 WORK = os.getcwd()
-PH = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis"
+PH = ENHANCER_ROOT + "/multi_agent/posthoc_analysis"
 CELLS = ["HepG2", "K562", "GM12878", "MCF.7", "A549"]
 OUT = "results/pool_enrichment"
 os.makedirs(OUT, exist_ok=True)
@@ -89,7 +95,7 @@ occ = E.groupby("motif_id")["fraction_hit"].mean() * 100.0     # the Fig 4d stat
 print(f"{len(E):,} rows, {occ.size} motifs with occupancy")
 
 core_ids = [l.split()[1] for l in open(
-    "/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/"
+    ENHANCER_ROOT + "/multi_agent/motif_pipeline/results/"
     "universal_regulator_motifs.meme") if l.startswith("MOTIF")]
 members = lambda p: [l.split()[1] for l in open(p) if l.startswith("MOTIF")]
 SETS = {}

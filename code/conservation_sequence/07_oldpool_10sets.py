@@ -22,8 +22,14 @@ Writes results/oldpool10/
 import os, glob
 import numpy as np, pandas as pd
 from scipy import stats
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-PH = "/stg3/data1/sam/enhancer_prediction/multi_agent/posthoc_analysis"
+PH = ENHANCER_ROOT + "/multi_agent/posthoc_analysis"
 OUT = "results/oldpool10"; os.makedirs(OUT, exist_ok=True)
 members = lambda p: [l.split()[1] for l in open(p) if l.startswith("MOTIF")]
 SETS = {int(f.rsplit("_", 1)[1].split(".")[0]): members(f) for f in sorted(glob.glob(f"{PH}/results/control_motifs_set_*.meme"))}
@@ -56,8 +62,8 @@ def parse(path):
             else: inm = False
     if name and rows: out[name] = np.array(rows, float)
     return out
-W = parse("/stg3/data1/sam/enhancer_prediction/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme")
-W.update(parse("/stg3/data1/sam/enhancer_prediction/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"))
+W = parse(ENHANCER_ROOT + "/multi_agent/motif_pipeline/results/universal_regulator_motifs.meme")
+W.update(parse(ENHANCER_ROOT + "/JASPAR2022_CORE_vertebrates_non_redundant_unique_names.meme"))
 CG = {k: float(np.mean(v[:, 1] + v[:, 2])) for k, v in W.items()}
 
 permotif = D.groupby("motif_id")["median_score"].median()

@@ -17,6 +17,12 @@ from torch.utils.data import DataLoader, TensorDataset
 from torch.nn.functional import mse_loss
 
 # Maintain tf 1.x behaviour under tf 2.x
+# The data root: the work directory you created with bin/setup_work_dir.py and unpacked the
+# GitHub and Zenodo data into. `source env.sh` exports it, or set it yourself (see PATHS.md).
+ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
+if not ENHANCER_ROOT:
+    raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 random.seed(42)
@@ -38,7 +44,7 @@ NUM_BRANCHES = 10
 # Paths
 TRAINED_MODELS = "./trained_models/"
 MODEL_METADATA = "./trained_models_data/"
-saveXdir="/stg3/data1/sam/enhancer_prediction/training_one_hot"
+saveXdir=ENHANCER_ROOT + "/training_one_hot"
 
 PRO_ONLY = False
 
@@ -66,8 +72,8 @@ decay = 0
 patience = 10
 
 # X and y data directories
-saveXdir="/stg3/data1/sam/enhancer_prediction/training_one_hot"
-saveydir="/stg3/data1/sam/enhancer_prediction/training_y"
+saveXdir=ENHANCER_ROOT + "/training_one_hot"
+saveydir=ENHANCER_ROOT + "/training_y"
 
 REMARK = "256MOTIF_pytorch"
 GENES = 18356
@@ -80,7 +86,7 @@ else:
     NUM_BRANCHES = 20
 
 # Use only non redundant cell lines to train & filter out cells with bad QC
-nonDupBSSID = np.genfromtxt("/stg3/data1/sam/enhancer_prediction/Epimap_BSSID_nondup.txt", delimiter="\t", dtype=str)
+nonDupBSSID = np.genfromtxt(ENHANCER_ROOT + "/Epimap_BSSID_nondup.txt", delimiter="\t", dtype=str)
 badQC = ["BSS01297", "BSS01325"]
 nonDupBSSID = np.array([item for item in nonDupBSSID if item not in badQC])
 nonDupBSSID = sys.argv[1:] or list(nonDupBSSID)   # biosample(s) on the command line; default: all
@@ -237,8 +243,8 @@ def create_hook(activations, name):
  
 # Save motifs to MEME file
 def write_motifs_to_meme_file(motifs, file_name, BSSID):
-    os.makedirs("/stg3/data1/sam/enhancer_prediction/cell_type_specific_CNN/" + BSSID + "/", exist_ok=True)
-    with open("/stg3/data1/sam/enhancer_prediction/cell_type_specific_CNN/" + BSSID + "/" + file_name, 'w') as f:
+    os.makedirs(ENHANCER_ROOT + "/cell_type_specific_CNN/" + BSSID + "/", exist_ok=True)
+    with open(ENHANCER_ROOT + "/cell_type_specific_CNN/" + BSSID + "/" + file_name, 'w') as f:
         f.write('MEME version 5.1.1\n\n')
         f.write('ALPHABET= ACGT\n\n')
         f.write('strands: + -\n\n')
@@ -256,7 +262,7 @@ for bssid in nonDupBSSID:
     print("Processing " + bssid)
     filesX = [bssid + ".one_hot.npy"]
     filesy = [bssid + ".y.npy"]
-    DIR = "/stg3/data1/sam/enhancer_prediction/cell_type_specific_CNN/" + bssid + "/"
+    DIR = ENHANCER_ROOT + "/cell_type_specific_CNN/" + bssid + "/"
 
     # Load data
     X_enc_list = []
@@ -435,10 +441,10 @@ for bssid in nonDupBSSID:
 
         # combine similar motifs
         write_motifs_to_meme_file(pro_motifs, full_model_name + '_' + str(iteration) + '_pro_motifs_all_256.meme', bssid)
-        np.save("/stg3/data1/sam/enhancer_prediction/cell_type_specific_CNN/" + bssid + "/" + full_model_name + '_' + str(iteration) + '_pro_motifs_weights_all_256.npy', pro_motif_weights)
+        np.save(ENHANCER_ROOT + "/cell_type_specific_CNN/" + bssid + "/" + full_model_name + '_' + str(iteration) + '_pro_motifs_weights_all_256.npy', pro_motif_weights)
 
         # write_motifs_to_meme_file(enh_motifs, full_model_name + '_' + str(iteration) +'_enh_motifs_all_256.meme', bssid)
-        # np.save("/stg3/data1/sam/enhancer_prediction/cell_type_specific_CNN/" + bssid + "/" + full_model_name + '_' + str(iteration) + '_enh_motifs_weights_all_256.npy', enh_motif_weights)
+        # np.save("$ENHANCER_ROOT/cell_type_specific_CNN/" + bssid + "/" + full_model_name + '_' + str(iteration) + '_enh_motifs_weights_all_256.npy', enh_motif_weights)
         # print("done")
 
 

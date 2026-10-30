@@ -22,14 +22,19 @@ with the command that produced them documented and, where feasible, runnable beh
 git clone https://github.com/Wang-lab-UCSD/CNNCR_WangLab.git && cd CNNCR_WangLab
 conda env create -f environment.yml          # ~15 min; conda >= 23.10, or conda 23.9 with --solver=libmamba, or mamba/micromamba. CPU-only: replace pytorch-cuda=11.8 by cpuonly
 conda activate cnncr
-python bin/setup_work_dir.py --enhancer-root /abs/path/work    # creates the work directory and points the scripts at it
-jupyter lab notebooks/                        # start with 00_setup_and_data
+python bin/setup_work_dir.py --enhancer-root /abs/path/work    # YOUR choice of directory; everything downloaded goes under it
+source env.sh                                 # exports ENHANCER_ROOT=/abs/path/work (and SEQ_ROOT); the commands below use it
 ```
-Then unpack into the work directory the Zenodo archives the notebooks you want need (`external_data/ZENODO_MANIFEST.md`), and for
-notebooks 08, 10 and 11 download the ENCODE peak files (`python bin/download_encode_peaks.py --dest /abs/path/work/encode4_tf_chipseq`, 1 GB).
+There is no fixed location: `--enhancer-root` is the one directory you pick, and `setup_work_dir.py` records it in `env.sh` and
+`.roots.json` so the scripts and the notebooks both find it. Unpack into it the Zenodo archives the notebooks you want need
+(each archive and which notebook reads it: `external_data/ZENODO_MANIFEST.md`), and for notebooks 08, 10 and 11 download the ENCODE
+peak files. Notebook 00 then lists every input as `ok` or `--` with the exact path it expects, so start there.
 
 ```bash
-tar --keep-directory-symlink -xzf <archive> -C /abs/path/work
+cat <archive>.tar.gz.part* > <archive>.tar.gz          # only the three archives deposited in pieces
+tar --keep-directory-symlink -xzf <archive>.tar.gz -C "$ENHANCER_ROOT"
+python bin/download_encode_peaks.py --dest "$ENHANCER_ROOT/encode4_tf_chipseq"     # 1 GB, notebooks 08, 10, 11
+jupyter lab notebooks/                                 # start with 00_setup_and_data
 ```
 `--keep-directory-symlink` is required: the work directory's `multi_agent/` is a symlink to this repository's `code/`, and without the
 flag GNU tar replaces it with a real directory, so the archived files never reach `code/` and notebooks 06, 08, 10 and 11 report

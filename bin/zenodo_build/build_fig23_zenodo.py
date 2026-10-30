@@ -13,6 +13,7 @@ ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
 if not ENHANCER_ROOT:
     raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))     # scrub_staging lives beside this file
 E=ENHANCER_ROOT; MA=f"{E}/multi_agent"; G=f"{E}/github"; STG=f"{G}/_build/zenodo_staging"; OUT=f"{G}/zenodo_upload"
 B=[b.strip() for b in open(f"{E}/Epimap_BSSID_nondup.txt") if b.strip()]
 Z="pigz -p 8" if shutil.which("pigz") else "gzip"
@@ -45,6 +46,7 @@ multi_agent/motif_pipeline/results/all_feature_self_tomtom.txt                  
 multi_agent/motif_pipeline/results/universal_regulator_motifs.meme                              step 6: the 43 core motifs (as released; the notebook regenerates them)
 TOMTOM command behind every table: tomtom -no-ssc -verbosity 2 -text -dist pearson -min-overlap 7 -evalue -thresh 1 <query.meme> <target.meme>
 """)
+    import scrub_staging; scrub_staging.main(["fig2"])   # the MEME suite records its command line in its output: take the development paths out first
     tar("fig2_core_motif_derivation.tar.gz",S,["README.txt","cell_type_specific_CNN","training_y","multi_agent"])
 elif sys.argv[1]=="fig3":
     S=f"{STG}/fig3"; shutil.rmtree(S,ignore_errors=True); CS=f"{MA}/conservation_sequence"
@@ -68,4 +70,5 @@ multi_agent/conservation_sequence/results/pool_conservation{,_extra}/{BSSID}_mot
 multi_agent/conservation_protein/uniprot_sprot_human.dat.gz               UniProt Swiss-Prot human entries (DNA-binding domain annotations, panel g)
 multi_agent/conservation_protein/gnomAD_v2.1.1_transcripts_with_rmc.tsv   gnomAD v2.1.1 regional missense constraint (panel g)
 """)
+    import scrub_staging; scrub_staging.main(["fig3"])   # the MEME suite records its command line in its output: take the development paths out first
     tar("fig3_conservation_inputs.tar.gz",S,["README.txt","data_generated","multi_agent"])

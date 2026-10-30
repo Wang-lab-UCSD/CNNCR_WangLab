@@ -14,6 +14,7 @@ ENHANCER_ROOT = os.environ.get("ENHANCER_ROOT")
 if not ENHANCER_ROOT:
     raise SystemExit("set ENHANCER_ROOT to your work directory: source env.sh (see PATHS.md)")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))     # scrub_staging lives beside this file
 E=ENHANCER_ROOT; MA=f"{E}/multi_agent"; G=f"{E}/github"; STG=f"{G}/_build/zenodo_staging"; OUT=f"{G}/zenodo_upload"
 Z="pigz -p 8" if shutil.which("pigz") else "gzip"
 def tar(name,cwd,items): subprocess.run(f"tar -I '{Z}' -cf {OUT}/{name} -C {cwd} {' '.join(items)}",shell=True,check=True); print("wrote",name,"%.2f GB"%(os.path.getsize(f"{OUT}/{name}")/1e9))
@@ -39,6 +40,7 @@ multi_agent/posthoc_analysis/results/fimo_universal/{{BSSID}}_fimo.txt        FI
 multi_agent/posthoc_analysis/results/fimo_multi/set_{{0..9}}/{{BSSID}}_fimo.txt  the same for each of the ten random control sets of 43 JASPAR motifs
 multi_agent/enformer_snp_overlap/results/SNP_overlap.csv, wilcoxon_stats.csv   the published table and test (the notebook regenerates them)
 """)
+    import scrub_staging; scrub_staging.main(["fig4"])   # the MEME suite records its command line in its output: take the development paths out first
     tar("fig4_eqtl_inputs.tar.gz",S,["README.txt","enformer_comparison","geuvadis","data_generated","multi_agent"])
 elif cmd=="peaks":
     S=f"{STG}/peaks"; shutil.rmtree(S,ignore_errors=True); CE=f"{MA}/chipseq_enrichment"
@@ -57,6 +59,7 @@ multi_agent/chipseq_enrichment/results/fimo_poolscan_extra/{cell}/fimo_peaks/fim
 multi_agent/chipseq_enrichment/results/fimo/{K562,HEK293}/fimo_peaks/fimo.tsv          FIMO of the 43 core + 43 published control motifs (combined_motifs.meme), read by notebook 11
 multi_agent/chipseq_enrichment/results/oldpool10/fig4d_*.csv                        the published Fig. 4d tables (the notebook regenerates them)
 """)
+    import scrub_staging; scrub_staging.main(["peaks"])   # the MEME suite records its command line in its output: take the development paths out first
     tar("fig4_fig5_motif_sites_on_peaks.tar.gz",S,["README.txt","multi_agent"])
 elif cmd=="fig5":
     S=f"{STG}/fig5"; CE=f"{MA}/chipseq_enrichment"
@@ -83,4 +86,5 @@ multi_agent/chipseq_enrichment/results/reader_switching/hek_k562_switch_feasibil
 multi_agent/chipseq_enrichment/results/prof_plan/                       the published Fig. 5d-g tables and plot caches (notebook 11 regenerates them; kept for comparison)
 perturbseq_qn/perturbseq_qn_{K562,HEK293T}.npz                          quantile-normalised knockout-effect vectors of the two screens (see README_perturbseq_qn.txt)
 """)
+    import scrub_staging; scrub_staging.main(["fig5"])   # the MEME suite records its command line in its output: take the development paths out first
     tar("fig5_reader_switch_inputs.tar.gz",S,["README.txt","multi_agent","perturbseq_qn"])

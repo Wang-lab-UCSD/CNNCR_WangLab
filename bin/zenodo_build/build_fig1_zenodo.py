@@ -69,6 +69,7 @@ def pack():
         fh.write("BSSID\tname\n"); [fh.write(f"{b}\t{names.get(b,'')}\n") for b in B]
     tar("fig1_training_inputs_all116.tar.gz", STG, ["fig1_training_inputs/README.txt", "fig1_training_inputs/biosamples.tsv"] + [f"fig1_training_inputs/{b}.{x}" for b in B for x in ("windows.fa.gz", "expression.tsv")])
     shutil.copy2(f"{G}/_build/README_fig1_motif_sets.txt", f"{STG}/fig1_motif_sets/README.txt")
+    import scrub_staging; scrub_staging.main(["fig1_motif_sets"])   # the MEME suite records its command line in its output: take the development paths out first
     tar("fig1_motif_sets_all116.tar.gz", STG, ["fig1_motif_sets"])
 
 if __name__ == "__main__":

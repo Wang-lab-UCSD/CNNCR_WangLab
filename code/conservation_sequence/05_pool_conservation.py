@@ -2,7 +2,7 @@
 05 — phyloP at the binding sites of every motif in the control POOL, in one pass.
 
 Replaces running 01_extract_coordinates.py + 02_conservation_scores.py separately for each of
-the 20 new control sets. All 20 sets are subsets of the 291-motif pool, and FIMO was run with a
+the 20 new control sets. Every candidate set is a subset of the 334-motif scan pool, and FIMO was run with a
 p-value threshold (--no-qvalue --text), so a motif's hits do not depend on which other motifs
 shared the scan. We therefore score every pool motif ONCE per biosample and let the aggregation
 step take whichever 43 it needs.

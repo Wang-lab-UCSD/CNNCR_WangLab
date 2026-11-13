@@ -61,7 +61,7 @@ elif sys.argv[1]=="fig3":
 
 multi_agent/conservation_sequence/hg38.phyloP100way.promoter_windows.bw   UCSC phyloP100way (hg38) restricted to the union of the promoter windows (slots 0-9) of the
                                                                           116 biosamples; identical values to the full 9 GB file inside those windows
-multi_agent/posthoc_analysis/results/pool_scan/BSS00762_fimo.txt.gz       FIMO sites of the 43 core motifs + the 289-motif control pool in the K562 promoter windows
+multi_agent/posthoc_analysis/results/pool_scan/BSS00762_fimo.txt.gz       FIMO sites of the 43 core motifs + the 334-motif control scan pool in the K562 promoter windows
 multi_agent/posthoc_analysis/results/pool_scan_extra/BSS00762_fimo.txt.gz the 13 further pool motifs (all 116 biosamples: Zenodo fig3_pool_scans.tar.gz)
 data_generated/BSS00762.coord.exp.df.final.csv                            K562 window coordinates (sequence column emptied; all biosamples: window_coordinates.tar.gz)
 multi_agent/conservation_sequence/results/pool_conservation{,_extra}/{BSSID}_motif_summary.tsv

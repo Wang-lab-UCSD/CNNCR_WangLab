@@ -53,7 +53,7 @@ elif cmd=="peaks":
     open(f"{S}/README.txt","w").write("""Motif sites in ENCODE TF ChIP-seq peaks (notebooks 08 and 11). Unpack under $ENHANCER_ROOT (multi_agent/ = code/).
 Peaks = summit +/- 150 bp of every IDR-thresholded narrowPeak of every TF ChIP-seq experiment of the cell line (ENCODE4), restricted to
 TSS +/- 10 kb (code/chipseq_enrichment/01_prepare_peaks.py builds them from the user's ENCODE download; the sequence ids here are those peaks).
-multi_agent/chipseq_enrichment/results/fimo_poolscan/{cell}/fimo_peaks/fimo.tsv        FIMO (p < 1e-4) of the 43 core motifs + the 291-motif control pool
+multi_agent/chipseq_enrichment/results/fimo_poolscan/{cell}/fimo_peaks/fimo.tsv        FIMO (p < 1e-4) of the 43 core motifs + the 334-motif control scan pontrol pool
                                                                                    (posthoc_analysis/results/scan_core_plus_pool.meme) - K562, HepG2, A549, GM12878, MCF.7
 multi_agent/chipseq_enrichment/results/fimo_poolscan_extra/{cell}/fimo_peaks/fimo.tsv  the 13 further control motifs (scan_oldpool_extra.meme)
 multi_agent/chipseq_enrichment/results/fimo/{K562,HEK293}/fimo_peaks/fimo.tsv          FIMO of the 43 core + 43 published control motifs (combined_motifs.meme), read by notebook 11

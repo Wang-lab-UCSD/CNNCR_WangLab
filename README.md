@@ -1,8 +1,8 @@
-# A compact core motif code is differentially interpreted across human cell types
+# A compact motif vocabulary is differentially interpreted across human cell types
 
 Code and data to reproduce the figures of
 
-> Shen S, Wang W. *A compact core motif code is differentially interpreted across human cell types.* (2026, in preparation)
+> Shen S, Wang W. *A compact motif vocabulary is differentially interpreted across human cell types.* (2026, in preparation)
 
 CNN-CR (a convolutional network with contextual regression) learns transcription-factor motifs de novo while predicting gene
 expression from a gene's promoter and enhancer windows. Applied to 116 EpiMap biosamples it yields a motif vocabulary per biosample;
@@ -97,7 +97,7 @@ difference anywhere in a drawn curve is 1.4e-3.
 
 **In this repository** (`data/`): the K562 training input (window FASTA and expression, 20 MB), the K562 demonstration data of the
 motif de-replication and the count matrices, the released K562 model and predictions, the 43 core motifs, the four motif catalogues
-(JASPAR 2022 CORE vertebrates, CIS-BP 2.0 human, Epimotifs), gene lists and TSS, the biosample tables (Supplementary Tables ST2, ST3),
+(JASPAR 2022 CORE vertebrates, CIS-BP 2.0 human, EpiMotifs), gene lists and TSS, the biosample tables (Supplementary Tables ST2, ST3),
 the ENCODE accession table. Per-analysis result tables that the panels read ship in place under `code/<analysis>/results/`.
 
 **On Zenodo** (https://doi.org/10.5281/zenodo.22945154; `external_data/ZENODO_MANIFEST.md`): seven archives, one to three per figure, 9 GB in total, unpacked

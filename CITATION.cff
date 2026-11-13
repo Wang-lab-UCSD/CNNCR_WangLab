@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code or data, please cite the paper below."
-title: "A compact core motif code is differentially interpreted across human cell types"
+title: "A compact motif vocabulary is differentially interpreted across human cell types"
 authors:
   - family-names: Shen
     given-names: Sam
@@ -14,7 +14,7 @@ license: MIT
 date-released: 2026-09-13
 preferred-citation:
   type: article
-  title: "A compact core motif code is differentially interpreted across human cell types"
+  title: "A compact motif vocabulary is differentially interpreted across human cell types"
   authors:
     - family-names: Shen
       given-names: Sam

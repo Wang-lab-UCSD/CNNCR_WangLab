@@ -166,7 +166,6 @@ for m, c, _ in PICKS:
     lead_wins = (a > b2)                     # per gene, in the panel's x order
     win = float(lead_wins[ok].mean())
     P = stats.wilcoxon(a[ok], b2[ok]).pvalue
-    print("hello world")
     # ---- trace of every intermediate quantity behind P (2026-10-05, written for the user's audit) ----
     _tr = open(f"{OUT}/wilcoxon_trace_{TAG}_{SHORT(m)}_{c}.txt", "w")
     _d = a[ok] - b2[ok]
@@ -182,7 +181,7 @@ for m, c, _ in PICKS:
     _z = (_W - _mu) / _sig                       # scipy 'wilcox' / approx: no continuity correction here
     _z_cc = (_W - _mu + 0.5) / _sig              # with continuity correction (scipy's default, correction=True in old versions)
     _P_norm = 2 * stats.norm.sf(abs(_z)); _P_cc = 2 * stats.norm.sf(abs(_z_cc))
-    _tr.write(f"hello world\n\nPanel: motif {m} ({SHORT(m)}), cell line {c}\n")
+    _tr.write(f"Wilcoxon signed-rank trace for the leader vs runner-up of this panel\n\nPanel: motif {m} ({SHORT(m)}), cell line {c}\n")
     _tr.write(f"leader = {order[0]}, runner-up = {order[1]}\n")
     _tr.write(f"genes in panel = {len(a)}; genes with finite values for both readers (n used) = {int(ok.sum())}\n")
     _tr.write(f"median |effect| leader = {np.median(a[ok]):.6f}, runner-up = {np.median(b2[ok]):.6f}, ratio = {np.median(a[ok])/np.median(b2[ok]):.4f}\n")

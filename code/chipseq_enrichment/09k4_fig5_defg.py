@@ -503,5 +503,4 @@ for ext in ("pdf", "png", "svg"):
 plt.close(fig)
 for ext in ("pdf", "png", "svg"):
     shutil.copy2(f"{FIG}/fig5_defg_{TAG}.{ext}", f"{DEST}/fig5dg.{ext}")
-print(f"\nwrote {FIG}/fig5_defg_{TAG}.pdf  ({FIGW * 25.4:.0f} x {FIGH * 25.4:.0f} mm)"
-      f"\ncopied to {DEST}/fig5dg.pdf/.png/.svg   font: {FAMILY}")
+print(f"\nwrote {FIG}/fig5_defg_{TAG}.pdf  ({FIGW * 25.4:.0f} x {FIGH * 25.4:.0f} mm)   font: {FAMILY}")

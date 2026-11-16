@@ -170,7 +170,6 @@ for ext in ("pdf", "png", "svg"):
                 transparent=True)
     shutil.copy2(f"{OUT}/fig5bc_popularity_open.{ext}", f"{DEST}/fig5bc_locus_switch.{ext}")
 print(f"[out] {OUT}/fig5bc_popularity_open.pdf/.png/.svg")
-print(f"      copied to {DEST}/fig5bc_locus_switch.pdf/.png/.svg")
 print("\nPAIRS\n" + PAIR.to_string(index=False, float_format=lambda v: f"{v:.1f}"))
 print("\nPER MOTIF\n" + SW.to_string(index=False, float_format=lambda v: f"{v:.1f}"))
 tot = np.sum([v for v in ct.values()], axis=0)

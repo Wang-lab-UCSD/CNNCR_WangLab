@@ -13,16 +13,16 @@ Panel map (new layout, 2026-07-17):
   4b  square eQTL: core-vs-control overlap-RATIO paired scatter (16 biosamples)
   (4c = IGV genome-browser locus — user-supplied screenshot, not generated here)
   4d  ChIP occupancy, two sub-panels: (i) pooled core vs control %, (ii) per-cell-line medians
-  4e  cross-cell-type Pearson r by variance tercile (motif vs naive)
-  4f  HEK293 held-out: 116-line test-Spearman distribution + HEK star, per model class
+  4e  HEK293 held-out: 116-line test-Spearman distribution + HEK star, per model class
+  4f  cross-cell-type Pearson r by variance tercile (motif vs naive)
   4g  marker genes (8, 2x4): actual vs motif-model expression across 116 biosamples
 
 Data sources:
   4a/4b enformer_snp_overlap/results/SNP_overlap.csv + wilcoxon_stats.csv
   4d    chipseq_enrichment/results/enrichment_summary.csv + results/enrichment/{cell}_enrichment.csv
-  4e    proof1_cell_type_specificity/results/per_gene_correlations_zscored.csv
-  4f    posthoc_analysis/results/linear_rf/correlations.csv + results/cnn/*_universal_test_S.npy
+  4e    posthoc_analysis/results/linear_rf/correlations.csv + results/cnn/*_universal_test_S.npy
         HEK held-out values: Linear 0.6592, RF 0.6664, CNN 0.7280
+  4f    proof1_cell_type_specificity/results/per_gene_correlations_zscored.csv
   4g    training_y/{bssid}.y.npy + posthoc_analysis/results/count_matrices_universal/{bssid}_count_matrix.npy
         (5-fold RidgeCV recompute, identical to proof1 01_gene_wise_correlation.py)
 """
@@ -271,9 +271,9 @@ def panel_4d():
           f"({np.median(core)/np.median(ctrl):.2f}x), {fmtp(p_pool)}")
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 4e — cross-cell-type Pearson r by variance tercile (motif vs permutation null)
+# 4f — cross-cell-type Pearson r by variance tercile (motif vs permutation null)
 # ══════════════════════════════════════════════════════════════════════════════
-def panel_4e():
+def panel_4f():
     """Left: all 116 biosamples, core motifs against the permutation null.
     Right: the 59 biosamples Enformer covers, core motifs against Enformer,
     both scored on identical genes and biosamples. The two halves are separate
@@ -320,9 +320,9 @@ def panel_4e():
          [CORE, JASP], ["43 core motifs", "Enformer"],
          "Versus Enformer")
     fig.subplots_adjust(left=0.115, right=0.99, top=0.865, bottom=0.215, wspace=0.34)
-    save(fig, "fig4e_crosscell_tercile")
-    print("4e left  (116): ", [round(df[df.variance_tercile==t].pearson_r_motif.median(), 3) for t in order])
-    print("4e right  (59): core",
+    save(fig, "fig4f_crosscell_tercile")
+    print("4f left  (116): ", [round(df[df.variance_tercile==t].pearson_r_motif.median(), 3) for t in order])
+    print("4f right  (59): core",
           [round(e59[e59.tercile==t].r_core43.median(), 3) for t in order],
           "| enformer", [round(e59[e59.tercile==t].r_enformer.median(), 3) for t in order])
 
@@ -383,13 +383,13 @@ def panel_4raoa():
     save(fig, "fig4e2_raoa")
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 4f — HEK293 held-out: 116-line test-Spearman distribution + HEK star per model
+# 4e — HEK293 held-out: 116-line test-Spearman distribution + HEK star per model
 # ══════════════════════════════════════════════════════════════════════════════
 HEK = {"Linear": 0.6592, "Random forest": 0.6664, "CNN-CR": 0.7280}   # published values
 _HK = f"{MA}/hek_universal_prediction/results"
 if os.path.exists(f"{_HK}/hek_linear_rf.npz") and os.path.exists(f"{_HK}/cnn/hek_universal_test_S.npy"):   # notebook 09 results, when present
     _z = np.load(f"{_HK}/hek_linear_rf.npz"); HEK = {"Linear": float(_z["linear_test"]), "Random forest": float(_z["rf_test"]), "CNN-CR": float(np.load(f"{_HK}/cnn/hek_universal_test_S.npy"))}
-def panel_4f():
+def panel_4e():
     lrf = pd.read_csv(LRF)
     lin = lrf["linear_universal_test"].dropna().values
     rf  = lrf["rf_universal_test"].dropna().values
@@ -421,8 +421,8 @@ def panel_4f():
     ax.text(0.02, 0.02, "● 116 EpiMap data",
             transform=ax.transAxes, ha="left", va="bottom", fontsize=5, color=JASP)
     fig.subplots_adjust(left=0.255, right=0.985, top=0.865, bottom=0.165)
-    save(fig, "fig4f_hek_heldout")
-    print("4f: CNN median", round(float(np.median(cnn)), 3), "HEK", HEK["CNN-CR"])
+    save(fig, "fig4e_hek_heldout")
+    print("4e: CNN median", round(float(np.median(cnn)), 3), "HEK", HEK["CNN-CR"])
 
 # ══════════════════════════════════════════════════════════════════════════════
 # 4g — marker genes (8, 2x4): actual vs motif-model across 116 biosamples
@@ -522,11 +522,11 @@ def panel_4g(E, pred, labels):
     print(f"4g: rendered {len(MK)} marker(s): {[m[0] for m in MK]}")
 
 # ══════════════════════════════════════════════════════════════════════════════
-if __name__ == "__main__":   # repository scope: a, b, d and e (HEK293 held-out = panel_4f); c, f, g and the synovial-fibroblast half of e are not reproduced
+if __name__ == "__main__":   # repository scope: panels a, b, d and the HEK293 half of e; c, f, g and the synovial-fibroblast half of e are not reproduced
     panel_4a()
     panel_4b()
     panel_4d()
-    panel_4f()
+    panel_4e()
 if False:
     print("computing marker-gene CV predictions (RidgeCV, 5-fold)…")
     E, pred, labels = compute_predictions()

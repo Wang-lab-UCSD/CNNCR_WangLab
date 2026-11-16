@@ -248,7 +248,7 @@ def panel_c(ax):
     # motifs of the ten sets), not pseudo-replicated hits; the per-set range is in the legend
     p = float(st.loc["pooled", "p_fig3c"])
     ps = st.loc[[str(i) for i in range(10)], "p_fig3c"].astype(float)
-    print(f"[c] pooled P = {fmtp(p)}; per-set P range {ps.min():.1e}-{ps.max():.1e}, "
+    print(f"[c] pooled {fmtp(p)}; per-set P range {ps.min():.1e}-{ps.max():.1e}, "
           f"{(ps < 0.05).sum()}/10 sets P < 0.05")
     draw_violins(ax, d, [(CORE_E, CORE_F), (CTRL_E, CTRL_F)],
                  ["Core motifs", "Control motifs"],

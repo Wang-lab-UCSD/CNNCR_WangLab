@@ -538,4 +538,3 @@ import shutil as _sh
 _DEST = ENHANCER_ROOT + "/paper_figures/fig5"
 for _e in ("pdf", "png", "svg"):
     _sh.copy2(f"{FIG}/fig5_defg_allreaders_{TAG}.{_e}", f"{_DEST}/fig5dg.{_e}")
-print(f"copied to {_DEST}/fig5dg.pdf/.png/.svg")
